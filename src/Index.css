@@ -1,0 +1,5 @@
+/* Global body background inherits from global.css via CSS vars */
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
