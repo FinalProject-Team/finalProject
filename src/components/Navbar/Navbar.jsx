@@ -1,8 +1,8 @@
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Sun, Moon } from 'lucide-react';
 import { useState } from 'react';
 import styles from './Navbar.module.css';
 
-export default function Navbar() {
+export default function Navbar({ theme, toggleTheme }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -18,18 +18,28 @@ export default function Navbar() {
         <button
           className={styles.menuToggle}
           onClick={() => setIsOpen(!isOpen)}
+          aria-label="Toggle menu"
         >
           {isOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
 
         <div className={`${styles.navLinks} ${isOpen ? styles.active : ''}`}>
-          <a href="#home">Home</a>
-          <a href="#tracks">Tracks</a>
-          <a href="#about">About</a>
-          <a href="#jobs">Apply Job</a>
+          <a href="#home" onClick={() => setIsOpen(false)}>Home</a>
+          <a href="#tracks" onClick={() => setIsOpen(false)}>Tracks</a>
+          <a href="#courses" onClick={() => setIsOpen(false)}>Courses</a>
+          <a href="#about" onClick={() => setIsOpen(false)}>About</a>
+          <a href="#jobs" onClick={() => setIsOpen(false)}>Apply Job</a>
         </div>
 
         <div className={styles.authButtons}>
+          <button
+            className={styles.themeToggle}
+            onClick={toggleTheme}
+            aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+            title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+          >
+            {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+          </button>
           <button className={styles.loginBtn}>Login</button>
           <button className={styles.signupBtn}>Sign Up</button>
         </div>

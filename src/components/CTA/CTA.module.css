@@ -1,19 +1,18 @@
 .cta {
   position: relative;
   padding: 120px 2.5rem;
-  background: linear-gradient(135deg, rgba(10, 25, 47, 1) 0%, rgba(15, 35, 65, 0.8) 50%, rgba(20, 40, 70, 1) 100%);
+  background: var(--bg-secondary);
   overflow: hidden;
+  transition: background var(--transition);
 }
 
 .cta::before {
   content: '';
   position: absolute;
-  width: 500px;
-  height: 500px;
-  background: radial-gradient(circle, rgba(0, 200, 255, 0.1) 0%, transparent 70%);
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(0, 200, 255, 0.08) 0%, transparent 70%);
   border-radius: 50%;
-  top: -120px;
-  right: -120px;
+  top: -120px; right: -120px;
   filter: blur(70px);
   pointer-events: none;
 }
@@ -21,12 +20,10 @@
 .cta::after {
   content: '';
   position: absolute;
-  width: 500px;
-  height: 500px;
-  background: radial-gradient(circle, rgba(100, 100, 255, 0.1) 0%, transparent 70%);
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(100, 100, 255, 0.08) 0%, transparent 70%);
   border-radius: 50%;
-  bottom: -120px;
-  left: -120px;
+  bottom: -120px; left: -120px;
   filter: blur(70px);
   pointer-events: none;
 }
@@ -37,48 +34,52 @@
   text-align: center;
   position: relative;
   z-index: 2;
-  background: rgba(20, 40, 70, 0.42);
+  background: var(--bg-card);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(0, 200, 255, 0.15);
+  border: 1px solid var(--border-primary);
   border-radius: 2rem;
   padding: 5rem 3rem;
+  transition: background var(--transition), border-color var(--transition);
 }
 
 .badge {
   display: inline-block;
   background: rgba(0, 200, 255, 0.1);
-  border: 1px solid rgba(0, 200, 255, 0.3);
+  border: 1px solid var(--border-accent);
   border-radius: 2rem;
   padding: 0.5625rem 1.125rem;
-  color: #00c8ff;
+  color: var(--accent-cyan);
   font-size: 0.875rem;
   font-weight: 500;
   margin-bottom: 2rem;
+  transition: color var(--transition);
 }
 
 .title {
   font-size: clamp(2.25rem, 5vw, 3.75rem);
   font-weight: 800;
-  color: #ffffff;
+  color: var(--text-primary);
   line-height: 1.15;
-  margin: 0 0 1.5rem 0;
+  margin: 0 0 1.5rem;
   letter-spacing: -0.03em;
+  transition: color var(--transition);
 }
 
 .gradient {
-  background: linear-gradient(135deg, #00c8ff 0%, #c864ff 100%);
+  background: linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-purple) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .description {
-  color: #94a3b8;
+  color: var(--text-secondary);
   font-size: 1.125rem;
   line-height: 1.7;
   max-width: 600px;
   margin: 0 auto 3rem;
+  transition: color var(--transition);
 }
 
 .buttons {
@@ -88,8 +89,7 @@
   flex-wrap: wrap;
 }
 
-.primaryBtn,
-.secondaryBtn {
+.primaryBtn, .secondaryBtn {
   display: flex;
   align-items: center;
   gap: 0.625rem;
@@ -103,48 +103,33 @@
 }
 
 .primaryBtn {
-  background: linear-gradient(135deg, #00c8ff, #0080ff);
-  color: #ffffff;
-  box-shadow: 0 0 32px rgba(0, 200, 255, 0.38);
+  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+  color: #fff;
+  box-shadow: var(--shadow-btn);
 }
 
 .primaryBtn:hover {
-  box-shadow: 0 0 48px rgba(0, 200, 255, 0.58);
+  box-shadow: var(--shadow-btn-hover);
   transform: translateY(-3px);
 }
 
 .secondaryBtn {
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #ffffff;
+  border: 1px solid var(--border-float);
+  color: var(--text-primary);
+  transition: all 0.3s ease;
 }
 
 .secondaryBtn:hover {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.38);
+  background: var(--bg-tertiary);
+  border-color: var(--border-hover);
 }
 
 @media (max-width: 768px) {
-  .cta {
-    padding: 80px 1.5rem;
-  }
-  .ctaContainer {
-    padding: 3.5rem 2rem;
-    border-radius: 1.5rem;
-  }
-  .buttons {
-    flex-direction: column;
-    align-items: center;
-  }
-  .primaryBtn,
-  .secondaryBtn {
-    width: 100%;
-    justify-content: center;
-  }
+  .cta { padding: 80px 1.5rem; }
+  .ctaContainer { padding: 3.5rem 2rem; border-radius: 1.5rem; }
+  .buttons { flex-direction: column; align-items: center; }
+  .primaryBtn, .secondaryBtn { width: 100%; justify-content: center; }
 }
 
-@media (max-width: 480px) {
-  .ctaContainer {
-    padding: 2.5rem 1.5rem;
-  }
-}
+@media (max-width: 480px) { .ctaContainer { padding: 2.5rem 1.5rem; } }

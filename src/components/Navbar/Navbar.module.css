@@ -2,12 +2,13 @@
   position: fixed;
   top: 0;
   width: 100%;
-  background: rgba(10, 25, 47, 0.75);
+  background: var(--bg-nav);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(0, 200, 255, 0.1);
+  border-bottom: 1px solid var(--border-nav);
   z-index: 1000;
   padding: 0;
+  transition: background var(--transition), border-color var(--transition);
 }
 
 .navContainer {
@@ -21,9 +22,7 @@
   gap: 2rem;
 }
 
-.logoSection {
-  flex: 1;
-}
+.logoSection { flex: 1; }
 
 .logo {
   display: flex;
@@ -31,23 +30,25 @@
   gap: 0.625rem;
   font-size: 1.375rem;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--text-primary);
   cursor: pointer;
   text-decoration: none;
   letter-spacing: -0.02em;
+  transition: color var(--transition);
 }
 
 .logoIcon {
   width: 2.25rem;
   height: 2.25rem;
-  background: linear-gradient(135deg, #00c8ff, #0080ff);
+  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
   border-radius: 0.625rem;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.125rem;
-  box-shadow: 0 0 24px rgba(0, 200, 255, 0.5);
+  box-shadow: 0 0 24px rgba(0, 200, 255, 0.4);
   flex-shrink: 0;
+  color: #fff;
 }
 
 .navLinks {
@@ -58,7 +59,7 @@
 }
 
 .navLinks a {
-  color: #94a3b8;
+  color: var(--text-secondary);
   text-decoration: none;
   font-size: 0.9375rem;
   font-weight: 500;
@@ -66,23 +67,43 @@
   white-space: nowrap;
 }
 
-.navLinks a:hover {
-  color: #00c8ff;
-}
+.navLinks a:hover { color: var(--accent-cyan); }
 
 .authButtons {
   display: flex;
-  gap: 0.875rem;
+  gap: 0.75rem;
   flex: 1;
   justify-content: flex-end;
   align-items: center;
 }
 
+.themeToggle {
+  width: 38px;
+  height: 38px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-primary);
+  color: var(--accent-cyan);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease;
+  flex-shrink: 0;
+}
+
+.themeToggle:hover {
+  background: var(--bg-card);
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 12px rgba(0, 200, 255, 0.2);
+  transform: rotate(15deg);
+}
+
 .loginBtn {
   padding: 0.5625rem 1.375rem;
   background: transparent;
-  border: 1px solid rgba(0, 200, 255, 0.3);
-  color: #ffffff;
+  border: 1px solid var(--border-accent);
+  color: var(--text-primary);
   border-radius: 0.5rem;
   cursor: pointer;
   font-weight: 500;
@@ -92,13 +113,13 @@
 }
 
 .loginBtn:hover {
-  border-color: #00c8ff;
-  box-shadow: 0 0 12px rgba(0, 200, 255, 0.25);
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 12px rgba(0, 200, 255, 0.2);
 }
 
 .signupBtn {
   padding: 0.5625rem 1.5rem;
-  background: linear-gradient(135deg, #00c8ff, #0080ff);
+  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
   border: none;
   color: #ffffff;
   border-radius: 0.5rem;
@@ -106,12 +127,12 @@
   font-weight: 600;
   font-size: 0.9375rem;
   transition: all 0.25s ease;
-  box-shadow: 0 0 20px rgba(0, 200, 255, 0.35);
+  box-shadow: var(--shadow-btn);
   white-space: nowrap;
 }
 
 .signupBtn:hover {
-  box-shadow: 0 0 32px rgba(0, 200, 255, 0.55);
+  box-shadow: var(--shadow-btn-hover);
   transform: translateY(-2px);
 }
 
@@ -119,16 +140,14 @@
   display: none;
   background: none;
   border: none;
-  color: #00c8ff;
+  color: var(--accent-cyan);
   cursor: pointer;
   padding: 0.25rem;
   flex-shrink: 0;
 }
 
 @media (max-width: 900px) {
-  .navLinks {
-    gap: 2rem;
-  }
+  .navLinks { gap: 2rem; }
 }
 
 @media (max-width: 768px) {
@@ -144,7 +163,7 @@
     top: 68px;
     left: 0;
     right: 0;
-    background: rgba(10, 25, 47, 0.97);
+    background: var(--bg-mobile-nav);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     flex-direction: column;
@@ -153,7 +172,7 @@
     display: none;
     justify-content: center;
     align-items: center;
-    border-bottom: 1px solid rgba(0, 200, 255, 0.1);
+    border-bottom: 1px solid var(--border-nav);
   }
 
   .navLinks a {
@@ -162,9 +181,7 @@
     text-align: center;
   }
 
-  .navLinks.active {
-    display: flex;
-  }
+  .navLinks.active { display: flex; }
 
   .menuToggle {
     display: block;
@@ -176,9 +193,7 @@
     gap: 0.75rem;
   }
 
-  .logoSection {
-    flex: 1;
-  }
+  .logoSection { flex: 1; }
 }
 
 @media (max-width: 480px) {

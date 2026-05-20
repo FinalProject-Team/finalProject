@@ -1,7 +1,8 @@
 .dashboard {
   position: relative;
   padding: 120px 2.5rem;
-  background: linear-gradient(135deg, rgba(10, 25, 47, 1) 0%, rgba(15, 35, 65, 0.8) 50%, rgba(20, 40, 70, 1) 100%);
+  background: var(--bg-secondary);
+  transition: background var(--transition);
 }
 
 .header {
@@ -18,23 +19,25 @@
   border: 1px solid rgba(200, 100, 255, 0.3);
   border-radius: 2rem;
   padding: 0.5625rem 1.125rem;
-  color: #c864ff;
+  color: var(--accent-purple);
   font-size: 0.875rem;
   font-weight: 500;
   margin-bottom: 1.5rem;
+  transition: color var(--transition);
 }
 
 .title {
   font-size: clamp(2.25rem, 4vw, 3.25rem);
   font-weight: 800;
-  color: #ffffff;
+  color: var(--text-primary);
   margin: 0;
   letter-spacing: -0.03em;
   line-height: 1.15;
+  transition: color var(--transition);
 }
 
 .gradient {
-  background: linear-gradient(135deg, #00c8ff 0%, #0080ff 100%);
+  background: linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-blue) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -49,10 +52,10 @@
 }
 
 .card {
-  background: rgba(20, 40, 70, 0.45);
+  background: var(--bg-card);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(0, 200, 255, 0.1);
+  border: 1px solid var(--border-primary);
   border-radius: 1.25rem;
   padding: 2.25rem 2rem;
   transition: all 0.3s ease;
@@ -63,8 +66,8 @@
 }
 
 .card:hover {
-  border-color: rgba(0, 200, 255, 0.28);
-  box-shadow: 0 12px 40px rgba(0, 200, 255, 0.1);
+  border-color: var(--border-hover);
+  box-shadow: var(--shadow-card-hover);
   transform: translateY(-5px);
 }
 
@@ -77,47 +80,38 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #00c8ff;
+  color: var(--accent-cyan);
   flex-shrink: 0;
   transition: all 0.3s ease;
 }
 
 .card:hover .iconWrapper {
   background: rgba(0, 200, 255, 0.18);
-  box-shadow: 0 0 24px rgba(0, 200, 255, 0.28);
+  box-shadow: 0 0 24px rgba(0, 200, 255, 0.25);
 }
 
 .cardTitle {
   font-size: 1.1875rem;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--text-primary);
   margin: 0;
   letter-spacing: -0.01em;
+  transition: color var(--transition);
 }
 
 .cardDescription {
-  color: #94a3b8;
+  color: var(--text-secondary);
   line-height: 1.65;
   margin: 0;
   font-size: 0.9375rem;
   flex: 1;
+  transition: color var(--transition);
 }
 
-@media (max-width: 1024px) {
-  .grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
+@media (max-width: 1024px) { .grid { grid-template-columns: repeat(2, 1fr); } }
 
 @media (max-width: 768px) {
-  .dashboard {
-    padding: 80px 1.5rem;
-  }
-  .grid {
-    grid-template-columns: 1fr;
-    gap: 1.25rem;
-  }
-  .header {
-    margin-bottom: 3rem;
-  }
+  .dashboard { padding: 80px 1.5rem; }
+  .grid { grid-template-columns: 1fr; gap: 1.25rem; }
+  .header { margin-bottom: 3rem; }
 }
