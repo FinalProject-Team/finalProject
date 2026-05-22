@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './styles/global.css';
 import Home from './pages/Home';
+import Payment from './pages/Payment';
 
 export default function App() {
   const [theme, setTheme] = useState(() => {
@@ -14,5 +16,12 @@ export default function App() {
 
   const toggleTheme = () => setTheme(t => t === 'dark' ? 'light' : 'dark');
 
-  return <Home theme={theme} toggleTheme={toggleTheme} />;
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home theme={theme} toggleTheme={toggleTheme} />} />
+        <Route path="/payment" element={<Payment />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
