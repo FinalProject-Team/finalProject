@@ -2,7 +2,8 @@ import React from 'react'
 import styles from './Topbar.module.css'
 import { FaSearch } from "react-icons/fa";
 import { IoNotificationsOutline } from "react-icons/io5";
-import profileImg from '../../../assets/images/profileimage.jpg'
+import profileImg from "../../../assets/images/logo.jpg";
+
 
 export default function Topbar() {
 
