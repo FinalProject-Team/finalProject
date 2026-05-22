@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './styles/global.css';
 import Home from './pages/Home';
 import Payment from './pages/Payment';
+import Register from './components/layout/Register/Register';
 
 export default function App() {
   const [theme, setTheme] = useState(() => {
@@ -21,6 +22,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home theme={theme} toggleTheme={toggleTheme} />} />
         <Route path="/payment" element={<Payment />} />
+        <Route path="/register" element={<Register />} /> {/* 👈 الـ Route بتاع الـ Register بتاعك */}
       </Routes>
     </BrowserRouter>
   );
