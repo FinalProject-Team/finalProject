@@ -1,5 +1,6 @@
 import { Menu, X, Sun, Moon } from 'lucide-react';
 import { useState } from 'react';
+import { Link } from 'react-router-dom'; // 👈 ضفنا الـ Link هنا عشان التنقل
 import styles from './Navbar.module.css';
 
 export default function Navbar({ theme, toggleTheme }) {
@@ -41,7 +42,11 @@ export default function Navbar({ theme, toggleTheme }) {
             {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
           </button>
           <button className={styles.loginBtn}>Login</button>
-          <button className={styles.signupBtn}>Sign Up</button>
+          
+          {/* 👈 هنا حولنا الزرار لـ Link واديناه نفس الـ class بتاعها بالظبط عشان الديزاين ما يتأثرش نهائي */}
+          <Link to="/register" className={styles.signupBtn}>
+            Sign Up
+          </Link>
         </div>
       </div>
     </nav>
