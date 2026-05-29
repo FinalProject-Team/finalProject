@@ -14,7 +14,7 @@ export default function Sidebar() {
       </h2>
 
       <nav className={styles.nav}>
-        <Link to="/" className={styles.link}><MdDashboard/> Dashboard</Link>
+        <Link to="/dashboard/dashboard" className={styles.link}><MdDashboard/> Dashboard</Link>
         <Link to="/dashboard/profile" className={styles.link}><FaUser/> Profile</Link>
         <Link to="/dashboard/roadmap" className={styles.link}><MdWork/> Roadmap</Link>
         <Link to="/dashboard/chatbot" className={styles.link}><FaRobot/> Ai Chatbot</Link>

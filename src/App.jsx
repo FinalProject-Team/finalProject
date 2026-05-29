@@ -41,7 +41,7 @@ export default function App() {
       path: "/dashboard",
       element: <Layout />,
       children: [
-        { path: "", element: <Dashboard /> },
+        { path: "dashboard", element: <Dashboard /> },
         { path: "profile", element: <Profile /> },
         { path: "roadmap", element: <Roadmap /> },
         { path: "chatbot", element: <Chatbot /> },
