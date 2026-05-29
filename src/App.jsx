@@ -4,6 +4,7 @@ import './styles/global.css';
 import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
 import Home from './pages/Home';
 import Payment from './pages/Payment';
+import Ranking from './pages/Ranking/Ranking';
 import Layout from './components/layout/Layout';
 import Dashboard from './components/layout/Dashboard/Dashboard';
 import Career from './components/layout/Career Twin/Career';
@@ -22,7 +23,7 @@ const Chatbot = () => <h1>Chatbot</h1>
 const Jobs = () => <h1>Jobs</h1>
 const Progress = () => <h1>Progress</h1>
 const SoftSkills = () => <h1>Soft Skills</h1>
-const Ranking = () => <h1>Ranking</h1>
+
 const Landingpage = () => <h1>Landing Page</h1>
 
 export default function App() {
