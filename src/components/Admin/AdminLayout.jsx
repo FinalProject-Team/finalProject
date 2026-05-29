@@ -1,7 +1,7 @@
 import React from 'react';
+import { Outlet } from 'react-router-dom';
 import AdminSidebar from './AdminSidebar';
 import AdminTopbar from './AdminTopbar';
-import AdminDashboard from './AdminDashboard';
 import styles from './AdminLayout.module.css';
 
 export default function AdminLayout() {
@@ -11,8 +11,8 @@ export default function AdminLayout() {
       
       <div className={styles.mainContent}>
         <AdminTopbar />
-        <main>
-          <AdminDashboard />
+                <main style={{ width: '100%', minHeight: 'calc(100vh - 80px)', background: '#f8fafc' }}>
+          <Outlet /> 
         </main>
       </div>
     </div>

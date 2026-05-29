@@ -1,8 +1,11 @@
 import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { LayoutDashboard, Users, BookOpen, GraduationCap } from 'lucide-react';
 import styles from './AdminSidebar.module.css';
 
 export default function AdminSidebar() {
+  const location = useLocation();
+
   return (
     <div className={`${styles.sidebar} d-flex flex-column justify-content-between p-3`}>
       <div>
@@ -11,28 +14,43 @@ export default function AdminSidebar() {
             <BookOpen size={24} />
           </div>
           <div>
-            <h1 className={styles.logoTitle}>E-Learn Admin</h1>
+            <h1 className={styles.logoTitle}>Career Tech Admin</h1>
             <span className={styles.logoSubtitle}>Management Portal</span>
           </div>
         </div>
 
         <nav className="d-flex flex-column gap-1">
-          <a href="#dashboard" className={`${styles.navLink} ${styles.activeLink}`}>
+          <Link 
+            to="/admin" 
+            className={`${styles.navLink} ${location.pathname === '/admin' ? styles.activeLink : ''}`}
+          >
             <LayoutDashboard size={20} />
             <span>Dashboard</span>
-          </a>
-          <a href="#users" className={styles.navLink}>
+          </Link>
+
+          <Link 
+            to="/admin/users" 
+            className={`${styles.navLink} ${location.pathname === '/admin/users' ? styles.activeLink : ''}`}
+          >
             <Users size={20} />
             <span>Users</span>
-          </a>
-          <a href="#courses" className={styles.navLink}>
+          </Link>
+
+          <Link 
+            to="/admin/courses" 
+            className={`${styles.navLink} ${location.pathname === '/admin/courses' ? styles.activeLink : ''}`}
+          >
             <BookOpen size={20} />
             <span>Courses</span>
-          </a>
-          <a href="#lessons" className={styles.navLink}>
+          </Link>
+
+          <Link 
+            to="/admin/lessons" 
+            className={`${styles.navLink} ${location.pathname === '/admin/lessons' ? styles.activeLink : ''}`}
+          >
             <GraduationCap size={20} />
             <span>Lessons</span>
-          </a>
+          </Link>
         </nav>
       </div>
 

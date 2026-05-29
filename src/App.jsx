@@ -9,6 +9,11 @@ import Layout from './components/layout/Layout';
 import Dashboard from './components/layout/Dashboard/Dashboard';
 import Career from './components/layout/Career Twin/Career';
 import Register from './components/layout/Register/Register'; 
+import AdminLayout from './components/Admin/AdminLayout';
+import AdminDashboard from './components/Admin/AdminDashboard';
+import AdminUsers from './components/Admin/AdminUsers';
+import AdminCourses from './components/Admin/AdminCourses';
+import AdminLessons from './components/Admin/AdminLessons';
 
 const Profile = () => <h1>Profile</h1>
 const Roadmap = () => <h1>Roadmap</h1>
@@ -16,7 +21,6 @@ const Chatbot = () => <h1>Chatbot</h1>
 const Jobs = () => <h1>Jobs</h1>
 const Progress = () => <h1>Progress</h1>
 const SoftSkills = () => <h1>Soft Skills</h1>
-
 const Landingpage = () => <h1>Landing Page</h1>
 
 export default function App() {
@@ -37,6 +41,17 @@ export default function App() {
     
     { path: "/register", element: <Register /> },
     { path: "/login", element: <Landingpage /> },
+
+    {
+      path: "/admin",
+      element: <AdminLayout />,
+      children: [
+        { path: "", element: <AdminDashboard /> },
+        { path: "users", element: <AdminUsers /> },
+        { path: "courses", element: <AdminCourses /> },
+        { path: "lessons", element: <AdminLessons /> },
+      ]
+    },
 
     {
       path: "/dashboard",
