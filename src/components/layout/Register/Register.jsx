@@ -3,8 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FaUser, FaEnvelope, FaPhoneAlt, FaLock, FaEye, FaEyeSlash, FaUserPlus } from 'react-icons/fa';
 import styles from './Register.module.css';
 import { FcGoogle } from 'react-icons/fc';
-import { registerUser } from "../services/authServices";
-
+import { registerUser, loginWithGoogle } from "../services/authServices";
 import * as yup from 'yup';
 
 const schema = yup.object().shape({
@@ -43,7 +42,6 @@ export default function Register() {
   });
 
   const [errors, setErrors] = useState({});
-
   const navigate = useNavigate();
 
   function handleChange(e) {
@@ -58,6 +56,15 @@ export default function Register() {
       });
     }
   }
+
+  const handleGoogleLogin = async () => {
+    try {
+      await loginWithGoogle();
+    } catch (error) {
+      console.error("Google login error:", error.message);
+      alert("Google login failed: " + error.message);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -85,7 +92,7 @@ export default function Register() {
         err.inner.forEach((error) => {
           validationErrors[error.path] = error.message;
         });
-        setErrors(validationErrors); // هنعرض الأخطاء تحت الـ inputs
+        setErrors(validationErrors);
       } else {
         console.log(err);
         if (err.response && err.response.data) {
@@ -150,7 +157,8 @@ export default function Register() {
         <div className={styles.divider}>
           <span>OR</span>
         </div>
-        <button type="button" className={styles.googleBtn}>
+
+        <button type="button" className={styles.googleBtn} onClick={handleGoogleLogin}>
           <FcGoogle className={styles.googleIcon} />
           Continue with Google
         </button>
