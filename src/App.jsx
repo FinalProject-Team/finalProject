@@ -9,7 +9,12 @@ import Layout from './components/layout/Layout';
 import Dashboard from './components/layout/Dashboard/Dashboard';
 import Career from './components/layout/Career Twin/Career';
 import Register from './components/layout/Register/Register'; 
-
+import InstructorDashboardLayout from './components/InstructorDashboard/InstructorDashboardLayout/InstructorDashboardLayout';
+import InstructorDashboardDashboard from './components/InstructorDashboard/InstructorDashboardDashboard/InstructorDashboardDashboard';
+import InstructorDashboardCourses from "./components/InstructorDashboard/InstructorDashboardCourses/InstructorDashboardCourses";
+import InstructorDashboardInteractiveSessions from "./components/InstructorDashboard/InstructorDashboardInteractiveSessions/InstructorDashboardInteractiveSessions";
+import InstructorDashboardLessons from "./components/InstructorDashboard/InstructorDashboardLessons/InstructorDashboardLessons";
+import InstructorDashboardProfile from "./components/InstructorDashboard/InstructorDashboardProfile/InstructorDashboardProfile";
 const Profile = () => <h1>Profile</h1>
 const Roadmap = () => <h1>Roadmap</h1>
 const Chatbot = () => <h1>Chatbot</h1>
@@ -18,7 +23,6 @@ const Progress = () => <h1>Progress</h1>
 const SoftSkills = () => <h1>Soft Skills</h1>
 
 const Landingpage = () => <h1>Landing Page</h1>
-
 export default function App() {
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem('ct-theme') || 'dark';
@@ -33,11 +37,26 @@ export default function App() {
 
   const Router = createBrowserRouter([
     { path: "/", element: <Home theme={theme} toggleTheme={toggleTheme} /> },
+    { path: "/test", element: <h1>Test Page</h1> },
     { path: "/payment", element: <Payment /> },
     
     { path: "/register", element: <Register /> },
     { path: "/login", element: <Landingpage /> },
-
+     {
+     path: "/instructor",
+     element: <InstructorDashboardLayout />,
+     children: [
+       { path: "dashboard", element:<InstructorDashboardDashboard/> },
+       { path: "courses", element: <InstructorDashboardCourses /> },
+        { path: "lessons", element: <InstructorDashboardLessons /> },  
+        {
+          path: "interactive-sessions",
+           element: <InstructorDashboardInteractiveSessions />,
+          },
+          { path: "profile", element: <InstructorDashboardProfile /> },
+         
+      ],
+      },
     {
       path: "/dashboard",
       element: <Layout />,
