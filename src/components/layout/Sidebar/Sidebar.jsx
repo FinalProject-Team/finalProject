@@ -22,6 +22,7 @@ export default function Sidebar() {
         <Link to="/progress" className={styles.link}><FaChartBar/> Progress</Link>
         <Link to="/softSkills" className={styles.link}><FaUser/> Soft Skills</Link>
         <Link to="/dashboard/ranking" className={styles.link}><MdLeaderboard/> Ranking</Link>
+        <Link to="/community" className={styles.link}><FaRobot/> Community</Link>
         <Link to="/careertwin" className={styles.link}><FaRobot/> Career Twin</Link>
         <Link to="/register" className={styles.link}><FaRobot/> register</Link>
       </nav>
