@@ -37,7 +37,7 @@ const Roadmap = () => <h1>Roadmap</h1>
 const Chatbot = () => <h1>Chatbot</h1>
 const Jobs = () => <h1>Jobs</h1>
 const Progress = () => <h1>Progress</h1>
-const SoftSkills = () => <h1>Soft Skills</h1>
+
 
 const Landingpage = () => <h1>Landing Page</h1>
 export default function App() {
