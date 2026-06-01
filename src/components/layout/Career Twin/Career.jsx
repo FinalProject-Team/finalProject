@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './Career.module.css';
-import myimage from "../../../assets/images/logo.jpg";
+import myimage from "../../../assets/images/profile.png";
 
 export default function Career() {
   return (
