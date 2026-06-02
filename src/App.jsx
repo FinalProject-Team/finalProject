@@ -49,6 +49,25 @@ const Profile = () => (
         </div>
       </div>
       <div className="mt-auto"><Skills /></div>
+// --- استيرادات شغلك الجديد (تأكدي من صحة المسارات داخل مجلد component) ---
+import ProfileMetrics from "./components/Progress/ProfileMetrics.jsx";
+import XPGrowth from "./components/Progress/XPGrowth.jsx";
+import CourseCompletion from "./components/Progress/CourseCompletion.jsx";
+import ProgressperCourse from './components/Progress/ProgressperCourse'; 
+import DailyLearningHours from './components/Progress/DailyLearningHours';
+// ملاحظة: تأكدي من وجود ملف CSS خاص بشغلك إذا لزم الأمر
+
+// --- تعريف صفحة الـ Progress الخاصة بك كمكون ---
+const ProgressPage = () => (
+  <div style={{ backgroundColor: '#060814', minHeight: '100vh', padding: '40px 20px', color: 'white' }}>
+    <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+      <ProfileMetrics />
+      <div className="charts-layout-grid">
+        <XPGrowth />
+        <CourseCompletion />
+      </div>
+      <ProgressperCourse />
+      <DailyLearningHours />
     </div>
   </div>
 );
@@ -62,6 +81,16 @@ const Landingpage = () => <h1>Landing Page</h1>
 export default function App() {
   // (باقي الكود الخاص بالفريق كما هو تماماً)
   const [theme, setTheme] = useState(() => localStorage.getItem('ct-theme') || 'dark');
+// --- باقي المكونات المؤقتة ---
+const Profile = () => <h1>Profile</h1>
+const Roadmap = () => <h1>Roadmap</h1>
+const Chatbot = () => <h1>Chatbot</h1>
+const Jobs = () => <h1>Jobs</h1>
+const Landingpage = () => <h1>Landing Page</h1>
+
+export default function App() {
+  const [theme, setTheme] = useState(() => localStorage.getItem('ct-theme') || 'dark');
+
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('ct-theme', theme);
@@ -105,7 +134,7 @@ export default function App() {
         { path: "roadmap", element: <Roadmap /> },
         { path: "chatbot", element: <Chatbot /> },
         { path: "jobs", element: <Jobs /> },
-        { path: "progress", element: <Progress /> },
+        { path: "progress", element: <ProgressPage /> }, // <-- هنا تم دمج شغلك
         { path: "softSkills", element: <SoftSkills /> },
         { path: "ranking", element: <Ranking /> },
         { path: "careertwin", element: <Career /> },
