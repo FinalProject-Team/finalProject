@@ -3,7 +3,14 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/global.css'; 
 import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
 
-// --- استيرادات المشروع الأساسي ---
+// --- قمتُ بإضافة الـ Imports الخاصة بكِ هنا ---
+import ProfileHeader from "./components/Profileheader/Profileheader.jsx";
+import PersonalInformation from "./components/PersonalInformation/PersonalInformation.jsx";
+import SocialLinks from "./components/SocialLinks/SocialLinks.jsx";
+import Documents from "./components/Documents/Documents.jsx";
+import Skills from "./components/Skills/Skills.jsx";
+// --------------------------------------------
+
 import Home from './pages/Home';
 import SoftSkills from './pages/SoftSkills/SoftSkills';
 import Payment from './pages/Payment';
@@ -27,6 +34,21 @@ import InstructorDashboardLessons from "./components/InstructorDashboard/Instruc
 import InstructorDashboardProfile from "./components/InstructorDashboard/InstructorDashboardProfile/InstructorDashboardProfile";
 import LiveSession from './components/LiveSessions/LiveSession';
 
+// --- هذا المكون الخاص بكِ (تم دمجه هنا للحفاظ على الملف واحداً) ---
+const Profile = () => (
+  <div style={{ background: "#0B0F19", minHeight: "100vh", width: "100%", padding: "40px 0", color: "white" }}>
+    <div className="container d-flex flex-column justify-content-between" style={{ minHeight: "calc(100vh - 80px)" }}>
+      <div className="d-flex flex-column gap-4 mb-4">
+        <div><ProfileHeader /></div>
+        <div className="row g-4 m-0"> 
+          <div className="col-12 col-lg-7 p-0 pe-lg-3"><PersonalInformation /></div>
+          <div className="col-12 col-lg-5 p-0 d-flex flex-column gap-4">
+            <SocialLinks />
+            <Documents />
+          </div>
+        </div>
+      </div>
+      <div className="mt-auto"><Skills /></div>
 // --- استيرادات شغلك الجديد (تأكدي من صحة المسارات داخل مجلد component) ---
 import ProfileMetrics from "./components/Progress/ProfileMetrics.jsx";
 import XPGrowth from "./components/Progress/XPGrowth.jsx";
@@ -50,6 +72,15 @@ const ProgressPage = () => (
   </div>
 );
 
+const Roadmap = () => <h1>Roadmap</h1>
+const Chatbot = () => <h1>Chatbot</h1>
+const Jobs = () => <h1>Jobs</h1>
+const Progress = () => <h1>Progress</h1>
+const Landingpage = () => <h1>Landing Page</h1>
+
+export default function App() {
+  // (باقي الكود الخاص بالفريق كما هو تماماً)
+  const [theme, setTheme] = useState(() => localStorage.getItem('ct-theme') || 'dark');
 // --- باقي المكونات المؤقتة ---
 const Profile = () => <h1>Profile</h1>
 const Roadmap = () => <h1>Roadmap</h1>
@@ -76,9 +107,9 @@ export default function App() {
         const res = await api.post("/api/auth/google-login", { user });
         const result = res.data;
         const role = result?.user?.role;
-        if (role === "admin") window.location.href = "/admin";
-        else if (role === "instructor") window.location.href = "/instructor";
-        else window.location.href = "/dashboard/dashboard"; 
+        if (role === "admin") { window.location.href = "/admin"; } 
+        else if (role === "instructor") { window.location.href = "/instructor"; } 
+        else { window.location.href = "/dashboard/dashboard"; }
       } catch (error) { console.error("Error:", error); }
     };
     getSessionAndSendToBackend();
@@ -99,7 +130,7 @@ export default function App() {
     ]},
     { path: "/dashboard", element: <Layout />, children: [
         { path: "dashboard", element: <Dashboard /> },
-        { path: "profile", element: <Profile /> },
+        { path: "profile", element: <Profile /> }, // هنا قمنا باستدعاء المكون الجديد
         { path: "roadmap", element: <Roadmap /> },
         { path: "chatbot", element: <Chatbot /> },
         { path: "jobs", element: <Jobs /> },
