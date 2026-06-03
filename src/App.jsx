@@ -31,7 +31,7 @@ import InstructorDashboardCourses from "./components/InstructorDashboard/Instruc
 import InstructorDashboardInteractiveSessions from "./components/InstructorDashboard/InstructorDashboardInteractiveSessions/InstructorDashboardInteractiveSessions";
 import InstructorDashboardLessons from "./components/InstructorDashboard/InstructorDashboardLessons/InstructorDashboardLessons";
 import InstructorDashboardProfile from "./components/InstructorDashboard/InstructorDashboardProfile/InstructorDashboardProfile";
-
+import CourseDetails from './pages/CourseDetails/CourseDetails';
 const Profile = () => <h1>Profile</h1>
 const Roadmap = () => <h1>Roadmap</h1>
 const Chatbot = () => <h1>Chatbot</h1>
@@ -87,6 +87,10 @@ export default function App() {
     { path: "/payment", element: <Payment /> },
     { path: "/register", element: <Register /> },
     { path: "/login", element: <Landingpage /> },
+    {
+    path: "/course-details",
+    element: <CourseDetails />
+  },
      {
      path: "/instructor",
      element: <InstructorDashboardLayout />,
