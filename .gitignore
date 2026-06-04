@@ -1,17 +1,7 @@
-# Dependencies (المكتبات والكاش)
 node_modules/
-.vite/
-
-# Environments (الملفات السرية والمفاتيح)
 .env
 .env.local
 .env.development.local
 .env.production.local
-
-# Production Build (فولدر البلد النهائي)
+.vite/
 dist/
-dist-ssr/
-
-# Logs
-lines
-*.log
