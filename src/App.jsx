@@ -73,7 +73,7 @@ const ProgressPage = () => (
 const Roadmap = () => <h1>Roadmap</h1>;
 const Chatbot = () => <h1>Chatbot</h1>;
 const Jobs = () => <h1>Jobs</h1>;
-const Landingpage = () => <h1>Landing Page</h1>;
+const Login = () => <h1>Login</h1>;
 
 export default function App() {
   const [theme, setTheme] = useState(() => localStorage.getItem('ct-theme') || 'dark');
@@ -107,7 +107,7 @@ export default function App() {
     { path: "/test", element: <h1>Test Page</h1> },
     { path: "/payment", element: <Payment /> },
     { path: "/register", element: <Register /> },
-    { path: "/login", element: <Landingpage /> },
+    { path: "/login", element: <Login /> },
     { 
       path: "/instructor", 
       element: <InstructorDashboardLayout />, 
