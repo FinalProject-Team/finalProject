@@ -1,15 +1,19 @@
 import { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/global.css'; 
-import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
-// --- قمتُ بإضافة الـ Imports الخاصة بكِ هنا ---
 import ProfileHeader from "./components/Profileheader/Profileheader.jsx";
 import PersonalInformation from "./components/PersonalInformation/PersonalInformation.jsx";
 import SocialLinks from "./components/SocialLinks/SocialLinks.jsx";
 import Documents from "./components/Documents/Documents.jsx";
 import Skills from "./components/Skills/Skills.jsx";
-// --------------------------------------------
+
+import ProfileMetrics from "./components/Progress/ProfileMetrics.jsx";
+import XPGrowth from "./components/Progress/XPGrowth.jsx";
+import CourseCompletion from "./components/Progress/CourseCompletion.jsx";
+import ProgressperCourse from './components/Progress/ProgressperCourse'; 
+import DailyLearningHours from './components/Progress/DailyLearningHours';
 
 import Home from './pages/Home';
 import SoftSkills from './pages/SoftSkills/SoftSkills';
@@ -34,7 +38,6 @@ import InstructorDashboardLessons from "./components/InstructorDashboard/Instruc
 import InstructorDashboardProfile from "./components/InstructorDashboard/InstructorDashboardProfile/InstructorDashboardProfile";
 import LiveSession from './components/LiveSessions/LiveSession';
 
-// --- هذا المكون الخاص بكِ (تم دمجه هنا للحفاظ على الملف واحداً) ---
 const Profile = () => (
   <div style={{ background: "#0B0F19", minHeight: "100vh", width: "100%", padding: "40px 0", color: "white" }}>
     <div className="container d-flex flex-column justify-content-between" style={{ minHeight: "calc(100vh - 80px)" }}>
@@ -49,15 +52,10 @@ const Profile = () => (
         </div>
       </div>
       <div className="mt-auto"><Skills /></div>
-// --- استيرادات شغلك الجديد (تأكدي من صحة المسارات داخل مجلد component) ---
-import ProfileMetrics from "./components/Progress/ProfileMetrics.jsx";
-import XPGrowth from "./components/Progress/XPGrowth.jsx";
-import CourseCompletion from "./components/Progress/CourseCompletion.jsx";
-import ProgressperCourse from './components/Progress/ProgressperCourse'; 
-import DailyLearningHours from './components/Progress/DailyLearningHours';
-// ملاحظة: تأكدي من وجود ملف CSS خاص بشغلك إذا لزم الأمر
+    </div>
+  </div>
+);
 
-// --- تعريف صفحة الـ Progress الخاصة بك كمكون ---
 const ProgressPage = () => (
   <div style={{ backgroundColor: '#060814', minHeight: '100vh', padding: '40px 20px', color: 'white' }}>
     <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '24px' }}>
@@ -72,21 +70,10 @@ const ProgressPage = () => (
   </div>
 );
 
-const Roadmap = () => <h1>Roadmap</h1>
-const Chatbot = () => <h1>Chatbot</h1>
-const Jobs = () => <h1>Jobs</h1>
-const Progress = () => <h1>Progress</h1>
-const Landingpage = () => <h1>Landing Page</h1>
-
-export default function App() {
-  // (باقي الكود الخاص بالفريق كما هو تماماً)
-  const [theme, setTheme] = useState(() => localStorage.getItem('ct-theme') || 'dark');
-// --- باقي المكونات المؤقتة ---
-const Profile = () => <h1>Profile</h1>
-const Roadmap = () => <h1>Roadmap</h1>
-const Chatbot = () => <h1>Chatbot</h1>
-const Jobs = () => <h1>Jobs</h1>
-const Landingpage = () => <h1>Landing Page</h1>
+const Roadmap = () => <h1>Roadmap</h1>;
+const Chatbot = () => <h1>Chatbot</h1>;
+const Jobs = () => <h1>Jobs</h1>;
+const Landingpage = () => <h1>Landing Page</h1>;
 
 export default function App() {
   const [theme, setTheme] = useState(() => localStorage.getItem('ct-theme') || 'dark');
@@ -121,31 +108,43 @@ export default function App() {
     { path: "/payment", element: <Payment /> },
     { path: "/register", element: <Register /> },
     { path: "/login", element: <Landingpage /> },
-    { path: "/instructor", element: <InstructorDashboardLayout />, children: [
-        { path: "dashboard", element:<InstructorDashboardDashboard/> },
+    { 
+      path: "/instructor", 
+      element: <InstructorDashboardLayout />, 
+      children: [
+        { path: "dashboard", element: <InstructorDashboardDashboard /> },
         { path: "courses", element: <InstructorDashboardCourses /> },
         { path: "lessons", element: <InstructorDashboardLessons /> },  
         { path: "interactive-sessions", element: <InstructorDashboardInteractiveSessions /> },
         { path: "profile", element: <InstructorDashboardProfile /> },
-    ]},
-    { path: "/dashboard", element: <Layout />, children: [
+      ]
+    },
+    { 
+      path: "/dashboard", 
+      element: <Layout />, 
+      children: [
         { path: "dashboard", element: <Dashboard /> },
-        { path: "profile", element: <Profile /> }, // هنا قمنا باستدعاء المكون الجديد
+        { path: "profile", element: <Profile /> }, 
         { path: "roadmap", element: <Roadmap /> },
         { path: "chatbot", element: <Chatbot /> },
         { path: "jobs", element: <Jobs /> },
-        { path: "progress", element: <ProgressPage /> }, // <-- هنا تم دمج شغلك
+        { path: "progress", element: <ProgressPage /> }, 
         { path: "softSkills", element: <SoftSkills /> },
         { path: "ranking", element: <Ranking /> },
         { path: "careertwin", element: <Career /> },
-        { path: "live-session", element: <LiveSession/> },
-    ]},
-    { path: "/admin", element: <AdminLayout />, children: [
+        { path: "live-session", element: <LiveSession /> },
+      ]
+    },
+    { 
+      path: "/admin", 
+      element: <AdminLayout />, 
+      children: [
         { path: "", element: <AdminDashboard /> },
         { path: "users", element: <AdminUsers /> },
         { path: "courses", element: <AdminCourses /> },
         { path: "lessons", element: <AdminLessons /> }
-    ]}
+      ]
+    }
   ]);
 
   return <RouterProvider router={Router} />;
