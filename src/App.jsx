@@ -25,11 +25,14 @@ import Career from './components/layout/Career Twin/Career';
 import Register from './components/layout/Register/Register'; 
 import { supabase } from "./components/layout/services/supabaseClient"; 
 import api from "./components/layout/services/Api";
+
 import AdminLayout from './components/Admin/AdminLayout';
 import AdminDashboard from './components/Admin/AdminDashboard';
 import AdminUsers from './components/Admin/AdminUsers';
 import AdminCourses from './components/Admin/AdminCourses';
 import AdminLessons from './components/Admin/AdminLessons';
+
+
 import InstructorDashboardLayout from './components/InstructorDashboard/InstructorDashboardLayout/InstructorDashboardLayout';
 import InstructorDashboardDashboard from './components/InstructorDashboard/InstructorDashboardDashboard/InstructorDashboardDashboard';
 import InstructorDashboardCourses from "./components/InstructorDashboard/InstructorDashboardCourses/InstructorDashboardCourses";
@@ -75,8 +78,12 @@ const Chatbot = () => <h1>Chatbot</h1>;
 const Jobs = () => <h1>Jobs</h1>;
 const Login = () => <h1>Login</h1>;
 
+
+const Landingpage = () => <h1>Landing Page</h1>
 export default function App() {
-  const [theme, setTheme] = useState(() => localStorage.getItem('ct-theme') || 'dark');
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('ct-theme') || 'dark';
+  });
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -89,16 +96,28 @@ export default function App() {
     const getSessionAndSendToBackend = async () => {
       const { data } = await supabase.auth.getSession();
       const user = data?.session?.user;
+
       if (!user) return;
+
       try {
         const res = await api.post("/api/auth/google-login", { user });
         const result = res.data;
+
+        console.log("BACKEND RESPONSE:", result);
+
         const role = result?.user?.role;
-        if (role === "admin") { window.location.href = "/admin"; } 
-        else if (role === "instructor") { window.location.href = "/instructor"; } 
-        else { window.location.href = "/dashboard/dashboard"; }
-      } catch (error) { console.error("Error:", error); }
+        if (role === "admin") {
+          window.location.href = "/admin";
+        } else if (role === "instructor") {
+          window.location.href = "/instructor";
+        } else {
+          window.location.href = "/dashboard/dashboard"; 
+        }
+      } catch (error) {
+        console.error("Error sending token to backend:", error);
+      }
     };
+
     getSessionAndSendToBackend();
   }, []);
 
@@ -147,5 +166,7 @@ export default function App() {
     }
   ]);
 
-  return <RouterProvider router={Router} />;
+  return (
+    <RouterProvider router={Router} />
+  );
 }
