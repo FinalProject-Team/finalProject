@@ -32,13 +32,22 @@ import AdminUsers from './components/Admin/AdminUsers';
 import AdminCourses from './components/Admin/AdminCourses';
 import AdminLessons from './components/Admin/AdminLessons';
 
-
 import InstructorDashboardLayout from './components/InstructorDashboard/InstructorDashboardLayout/InstructorDashboardLayout';
 import InstructorDashboardDashboard from './components/InstructorDashboard/InstructorDashboardDashboard/InstructorDashboardDashboard';
 import InstructorDashboardCourses from "./components/InstructorDashboard/InstructorDashboardCourses/InstructorDashboardCourses";
 import InstructorDashboardInteractiveSessions from "./components/InstructorDashboard/InstructorDashboardInteractiveSessions/InstructorDashboardInteractiveSessions";
 import InstructorDashboardLessons from "./components/InstructorDashboard/InstructorDashboardLessons/InstructorDashboardLessons";
 import InstructorDashboardProfile from "./components/InstructorDashboard/InstructorDashboardProfile/InstructorDashboardProfile";
+import CourseDetails from './pages/CourseDetails/CourseDetails';
+
+import RegisterJob from "./components/layout/Register/JobRegister";
+import LiveSession from './components/LiveSessions/LiveSession';
+
+const Profile = () => <h1>Profile</h1>
+const Roadmap = () => <h1>Roadmap</h1>
+const Chatbot = () => <h1>Chatbot</h1>
+const Jobs = () => <h1>Jobs</h1>
+const Progress = () => <h1>Progress</h1>
 import LiveSession from './components/LiveSessions/LiveSession';
 
 const Profile = () => (
@@ -121,11 +130,32 @@ export default function App() {
     getSessionAndSendToBackend();
   }, []);
 
-  const Router = createBrowserRouter([
+const Router = createBrowserRouter([
     { path: "/", element: <Home theme={theme} toggleTheme={toggleTheme} /> },
     { path: "/test", element: <h1>Test Page</h1> },
     { path: "/payment", element: <Payment /> },
     { path: "/register", element: <Register /> },
+    { path: "/login", element: <Login /> },
+    {path: "/course-details", element: <CourseDetails />},
+    { path: "/register-job", element: <RegisterJob />},
+
+    {
+      path: "/instructor",
+      element: <InstructorDashboardLayout />,
+      children: [
+        { path: "dashboard", element:<InstructorDashboardDashboard/> },
+        { path: "courses", element: <InstructorDashboardCourses /> },
+        { path: "lessons", element: <InstructorDashboardLessons /> },  
+        {
+          path: "interactive-sessions",
+          element: <InstructorDashboardInteractiveSessions />,
+        },
+        { path: "profile", element: <InstructorDashboardProfile /> },
+      ],
+    },
+    {
+      path: "/admin",
+      element: <AdminLayout />,
     { path: "/login", element: <Login /> },
     { 
       path: "/instructor", 
@@ -138,10 +168,17 @@ export default function App() {
         { path: "profile", element: <InstructorDashboardProfile /> },
       ]
     },
+
+
+    {
+      path: "/dashboard",
+      element: <Layout />, children: [
+
     { 
       path: "/dashboard", 
       element: <Layout />, 
       children: [
+
         { path: "dashboard", element: <Dashboard /> },
         { path: "profile", element: <Profile /> }, 
         { path: "roadmap", element: <Roadmap /> },
@@ -154,6 +191,17 @@ export default function App() {
         { path: "live-session", element: <LiveSession /> },
       ]
     },
+
+
+    {
+      path: "/admin",
+      element: <AdminLayout />,children: [
+        { path: "", element: <AdminDashboard />},
+        {path: "users", element: <AdminUsers />},
+        {path: "courses", element: <AdminCourses />},
+        {path: "lessons", element: <AdminLessons />}
+      ]}
+
     { 
       path: "/admin", 
       element: <AdminLayout />, 
@@ -164,8 +212,8 @@ export default function App() {
         { path: "lessons", element: <AdminLessons /> }
       ]
     }
-  ]);
 
+  ]);
   return (
     <RouterProvider router={Router} />
   );

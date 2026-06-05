@@ -2,7 +2,7 @@ import React from 'react'
 import styles from './Sidebar.module.css'
 import { Link } from 'react-router-dom'
 import { MdDashboard, MdWork, MdLeaderboard } from "react-icons/md";
-import { FaUser, FaRobot, FaChartBar } from "react-icons/fa";
+import { FaUser, FaRobot, FaChartBar , FaVideo } from "react-icons/fa";
 import { BsBriefcaseFill } from "react-icons/bs";
 import logo from '../../../assets/images/logo.png'
 
@@ -23,7 +23,7 @@ export default function Sidebar() {
         <Link to="/dashboard/softSkills" className={styles.link}><FaUser/> Soft Skills</Link>
         <Link to="/dashboard/ranking" className={styles.link}><MdLeaderboard/> Ranking</Link>
         <Link to="/dashboard/careertwin" className={styles.link}><FaRobot/> Career Twin</Link>
-        <Link to="/dashboard/live-session" className={styles.link}><FaRobot/> Live Session</Link>
+       <Link to="/dashboard/live-session" className={styles.link}><FaVideo/> Live Session</Link>
       </nav>
     </div>
   )
