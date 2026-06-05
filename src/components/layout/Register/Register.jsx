@@ -42,12 +42,21 @@ export default function Register() {
   });
 
   const [errors, setErrors] = useState({});
+
   const [toastMessage, setToastMessage] = useState(""); // الستيت الجديدة للمسج
   const [toastType, setToastType] = useState("");       // نوع المسج (success أو error)
   
   const navigate = useNavigate();
 
   // تاييد يخلي المسج تختفي تلقائياً بعد 4 ثواني
+
+  
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastType, setToastType] = useState(""); 
+  
+  const navigate = useNavigate();
+
+
   useEffect(() => {
     if (toastMessage) {
       const timer = setTimeout(() => {
@@ -98,11 +107,19 @@ export default function Register() {
       console.log(response);
       
       setToastType("success");
+
       setToastMessage("Registration successful! Redirecting...");
       
       setTimeout(() => {
         navigate("/login");
       }, 2000);
+
+      setToastMessage("Registration successful! Redirecting to login...");
+      
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000); 
+
 
     } catch (err) {
       if (err instanceof yup.ValidationError) {
@@ -136,12 +153,12 @@ export default function Register() {
     <div className={styles.container}>
       <div className={styles.card}>
         
-        {/* مكان عرض المسج العادية بشكل أنيق جوه الكارت */}
-        {toastMessage && (
-          <div className={`${styles.toast} ${toastType === 'success' ? styles.toastSuccess : styles.toastError}`}>
-            {toastType === 'success' ? '🎉 ' : '❌ '} {toastMessage}
-          </div>
-        )}
+
+      {toastMessage && (
+      <div className={`${styles.toast} ${toastType === 'success' ? styles.toastSuccess : styles.toastError}`}>
+      {toastType === 'success' ? '✅ ' : '❌ '} {toastMessage}
+      </div>
+      )}
 
         <h1 className={styles.title}>CareerTech</h1>
         <p className={styles.subtitle}>Create your account</p>
