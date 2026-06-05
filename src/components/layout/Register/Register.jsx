@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaUser, FaEnvelope, FaPhoneAlt, FaLock, FaEye, FaEyeSlash, FaUserPlus } from 'react-icons/fa';
 import styles from './Register.module.css';
@@ -42,7 +42,20 @@ export default function Register() {
   });
 
   const [errors, setErrors] = useState({});
+  
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastType, setToastType] = useState(""); 
+  
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (toastMessage) {
+      const timer = setTimeout(() => {
+        setToastMessage("");
+      }, 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [toastMessage]);
 
   function handleChange(e) {
     setFormData({
@@ -62,7 +75,8 @@ export default function Register() {
       await loginWithGoogle();
     } catch (error) {
       console.error("Google login error:", error.message);
-      alert("Google login failed: " + error.message);
+      setToastType("error");
+      setToastMessage("Google login failed: " + error.message);
     }
   };
 
@@ -71,7 +85,6 @@ export default function Register() {
 
     try {
       await schema.validate(formData, { abortEarly: false });
-      
       setErrors({});
 
       const response = await registerUser({
@@ -83,8 +96,13 @@ export default function Register() {
       });
 
       console.log(response);
-      alert("Registration successful!");
-      navigate("/login");
+      
+      setToastType("success");
+      setToastMessage("Registration successful! Redirecting to login...");
+      
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000); 
 
     } catch (err) {
       if (err instanceof yup.ValidationError) {
@@ -95,10 +113,14 @@ export default function Register() {
         setErrors(validationErrors);
       } else {
         console.log(err);
-        if (err.response && err.response.data) {
-          alert(err.response.data.message || "Registration failed");
+        setToastType("error");
+        
+        const serverMessage = err.response?.data?.message || err.message || "";
+        
+        if (serverMessage.toLowerCase().includes("already") || serverMessage.toLowerCase().includes("exists")) {
+          setToastMessage("This email is already registered! Try logging in.");
         } else {
-          alert("Registration failed");
+          setToastMessage(serverMessage || "Registration failed. Please try again.");
         }
       }
     }
@@ -107,6 +129,13 @@ export default function Register() {
   return (
     <div className={styles.container}>
       <div className={styles.card}>
+        
+        {toastMessage && (
+          <div className={`${styles.toast} ${toastType === 'success' ? styles.toastSuccess : styles.toastError}`}>
+            {toastType === 'success' ? '✅ ' : '❌ '} {toastMessage}
+          </div>
+        )}
+
         <h1 className={styles.title}>CareerTech</h1>
         <p className={styles.subtitle}>Create your account</p>
 
