@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaUser, FaEnvelope, FaPhoneAlt, FaLock, FaEye, FaEyeSlash, FaUserPlus } from 'react-icons/fa';
-import styles from './Register.module.css';
+import { FaUser, FaEnvelope, FaPhoneAlt, FaLock, FaEye, FaEyeSlash, FaBriefcase, FaBuilding } from 'react-icons/fa';
+import styles from './JobRegister.module.css'; 
 import { FcGoogle } from 'react-icons/fc';
 import { registerUser, loginWithGoogle } from "../services/authServices";
 import * as yup from 'yup';
@@ -29,7 +29,7 @@ const schema = yup.object().shape({
     .oneOf([yup.ref('password'), null], "Passwords do not match"),
 });
 
-export default function Register() {
+export default function JobRegister() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   
@@ -42,12 +42,11 @@ export default function Register() {
   });
 
   const [errors, setErrors] = useState({});
-  const [toastMessage, setToastMessage] = useState(""); // الستيت الجديدة للمسج
-  const [toastType, setToastType] = useState("");       // نوع المسج (success أو error)
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastType, setToastType] = useState(""); 
   
   const navigate = useNavigate();
 
-  // تاييد يخلي المسج تختفي تلقائياً بعد 4 ثواني
   useEffect(() => {
     if (toastMessage) {
       const timer = setTimeout(() => {
@@ -96,13 +95,17 @@ export default function Register() {
       });
 
       console.log(response);
+
+      if (response?.data?.token) {
+        localStorage.setItem("token", response.data.token);
+      }
       
       setToastType("success");
-      setToastMessage("Registration successful! Redirecting...");
+      setToastMessage("Professional account created! Redirecting to jobs...");
       
       setTimeout(() => {
-        navigate("/login");
-      }, 2000);
+        navigate("/dashboard/jobs");
+      }, 1000); 
 
     } catch (err) {
       if (err instanceof yup.ValidationError) {
@@ -117,16 +120,11 @@ export default function Register() {
         
         const serverMessage = err.response?.data?.message || err.message || "";
         const statusCode = err.response?.status;
-
-        if (
-          statusCode === 409 || 
-          statusCode === 400 || 
-          serverMessage.toLowerCase().includes("already") || 
-          serverMessage.toLowerCase().includes("exists")
-        ) {
+        
+        if (statusCode === 404 || statusCode === 400 || serverMessage.toLowerCase().includes("already") || serverMessage.toLowerCase().includes("exists")) {
           setToastMessage("This email is already registered! Try logging in.");
         } else {
-          setToastMessage(serverMessage || "Registration failed");
+          setToastMessage(serverMessage || "Registration failed. Please try again.");
         }
       }
     }
@@ -136,33 +134,35 @@ export default function Register() {
     <div className={styles.container}>
       <div className={styles.card}>
         
-        {/* مكان عرض المسج العادية بشكل أنيق جوه الكارت */}
         {toastMessage && (
           <div className={`${styles.toast} ${toastType === 'success' ? styles.toastSuccess : styles.toastError}`}>
-            {toastType === 'success' ? '🎉 ' : '❌ '} {toastMessage}
+            {toastType === 'success' ? '💼 ' : '❌ '} {toastMessage}
           </div>
         )}
 
-        <h1 className={styles.title}>CareerTech</h1>
-        <p className={styles.subtitle}>Create your account</p>
+        <div className={styles.headerArea}>
+          <FaBriefcase className={styles.jobLogo} />
+          <h1 className={styles.title}>CareerTech <span className={styles.badge}>Jobs</span></h1>
+        </div>
+        <p className={styles.subtitle}>Create your professional profile to apply for jobs</p>
 
         <form className={styles.form} onSubmit={handleSubmit}>
           
           <div className={styles.inputGroup}>
             <FaUser className={styles.iconLeft} />
-            <input type="text" name="fullName" placeholder="Full Name" className={styles.input} value={formData.fullName} onChange={handleChange} />
+            <input type="text" name="fullName" placeholder="Full Name (As in CV)" className={styles.input} value={formData.fullName} onChange={handleChange} />
           </div>
           {errors.fullName && <p className={styles.errorText}>{errors.fullName.message || errors.fullName}</p>}
 
           <div className={styles.inputGroup}>
             <FaEnvelope className={styles.iconLeft} />
-            <input type="email" name="email" placeholder="Email address" className={styles.input} value={formData.email} onChange={handleChange} />
+            <input type="email" name="email" placeholder="Professional Email address" className={styles.input} value={formData.email} onChange={handleChange} />
           </div>
           {errors.email && <p className={styles.errorText}>{errors.email.message || errors.email}</p>}
 
           <div className={styles.inputGroup}>
             <FaPhoneAlt className={styles.iconLeft} />
-            <input type="tel" name="phone" placeholder="Phone number" className={styles.input} value={formData.phone} onChange={handleChange} />
+            <input type="tel" name="phone" placeholder="Contact number" className={styles.input} value={formData.phone} onChange={handleChange} />
           </div>
           {errors.phone && <p className={styles.errorText}>{errors.phone.message || errors.phone}</p>}
 
@@ -185,8 +185,8 @@ export default function Register() {
           {errors.confirmPassword && <p className={styles.errorText}>{errors.confirmPassword.message || errors.confirmPassword}</p>}
 
           <button type="submit" className={styles.btn}>
-            <FaUserPlus className={styles.btnIcon} />
-            Sign Up
+            <FaBuilding className={styles.btnIcon} />
+            Join Job 
           </button>       
         </form>
 
@@ -196,12 +196,11 @@ export default function Register() {
 
         <button type="button" className={styles.googleBtn} onClick={handleGoogleLogin}>
           <FcGoogle className={styles.googleIcon} />
-          Continue with Google
+          Sign up with Google
         </button>
 
         <p className={styles.footerText}>
-          Already have an account? 
-          <Link to="/login" className={styles.loginLink}>Login</Link>
+          Looking for talent? <span className={styles.employerLink}>Register as Employer</span>
         </p>
       </div>
     </div>
