@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import styles from './Courses.module.css';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -8,12 +9,13 @@ export default function Courses() {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCourses = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`https://final-project-backend-production-5fe7.up.railway.app/api/courses`);
+        const response = await axios.get(`https://final-project-backend-production-214a.up.railway.app/api/courses`);
         const data = Array.isArray(response.data) ? response.data : [];
         setCourses(data.filter(c => c.title));
       } catch (err) {
@@ -108,7 +110,20 @@ export default function Courses() {
                 <div className={styles.price}>{formatPrice(course.price)}</div>
               </div>
 
-              <button className={styles.enrollBtn}>Enroll Now →</button>
+              <button
+  className={styles.enrollBtn}
+  onClick={() =>
+    navigate('/payment', {
+      state: {
+        courseId: course.id,
+        courseTitle: course.title,
+        price: course.price,
+      },
+    })
+  }
+>
+  Enroll Now →
+</button>
             </div>
           </div>
         ))}

@@ -1,9 +1,8 @@
 import Header from "../../components/Header/Header";
-
 import InstructorCard from "../../components/InstructorCard/InstructorCard";
 
 import StatsCards from "../../components/StatsCards/StatsCards";
-import RoadmapSection from "../../components/RoadmapSection/RoadmapSection";
+import RoadmapSection from "../../components/Roadmap/RoadmapMilestones/RoadmapMilestones";
 
 import PriceCard from "../../components/PriceCard/PriceCard";
 
