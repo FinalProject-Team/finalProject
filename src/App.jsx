@@ -130,8 +130,10 @@ export default function App() {
  const getSessionAndSendToBackend = async () => {
  const { data } = await supabase.auth.getSession();
  const user = data?.session?.user;
+ const pathname = window.location.pathname;
 
  if (!user) return;
+ if (!['/', '/login', '/register'].includes(pathname)) return;
 
  try {
  const res = await api.post("/api/auth/google-login", { user });
@@ -141,9 +143,8 @@ export default function App() {
  window.location.href = "/admin";
  } else if (role === "instructor") {
  window.location.href = "/instructor";
- } else {
- window.location.href = "/dashboard/dashboard";
  }
+ // Students stay on the current page until payment is completed
  } catch (error) {
  console.error(error);
  }
@@ -219,7 +220,11 @@ export default function App() {
 
  {
  path: "/dashboard",
- element: <Layout />,
+ element: (
+   <ProtectedRoute requirePayment={true}>
+     <Layout />
+   </ProtectedRoute>
+ ),
  children: [
  { path: "dashboard", element: <Dashboard /> },
  { path: "profile", element: <Profile /> },
