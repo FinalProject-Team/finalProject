@@ -55,41 +55,30 @@ import DailyLearningHours from './components/Progress/DailyLearningHours';
 /* Services */
 import { supabase } from "./components/layout/services/supabaseClient";
 import api from "./components/layout/services/Api";
-import { apiGoogleLogin } from './services/api/api';
 
 /* Context */
 import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { PostsProvider } from './context/PostsContext';
 
-/* =======================
- PROFILE PAGE
-======================= */
 const Profile = () => (
   <div style={{ background: "#0B0F19", minHeight: "100vh", width: "100%", padding: "40px 0", color: "white" }}>
     <div className="container d-flex flex-column justify-content-between" style={{ minHeight: "calc(100vh - 80px)" }}>
       <div className="d-flex flex-column gap-4 mb-4">
         <ProfileHeader />
         <div className="row g-4 m-0">
-          <div className="col-12 col-lg-7 p-0 pe-lg-3">
-            <PersonalInformation />
-          </div>
+          <div className="col-12 col-lg-7 p-0 pe-lg-3"><PersonalInformation /></div>
           <div className="col-12 col-lg-5 p-0 d-flex flex-column gap-4">
             <SocialLinks />
             <Documents />
           </div>
         </div>
       </div>
-      <div className="mt-auto">
-        <Skills />
-      </div>
+      <div className="mt-auto"><Skills /></div>
     </div>
   </div>
 );
 
-/* =======================
- PROGRESS PAGE
-======================= */
 const ProgressPage = () => (
   <div style={{ backgroundColor: '#060814', minHeight: '100vh', padding: '40px 20px', color: 'white' }}>
     <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '24px' }}>
@@ -104,9 +93,6 @@ const ProgressPage = () => (
   </div>
 );
 
-/* =======================
- THEME
-======================= */
 export default function App() {
   const [theme, setTheme] = useState(() => localStorage.getItem('ct-theme') || 'dark');
 
@@ -117,15 +103,18 @@ export default function App() {
     localStorage.setItem('ct-theme', theme);
   }, [theme]);
 
-  /* =======================
-     AUTH SESSION HANDLER
-  ======================= */
   useEffect(() => {
     const getSessionAndSendToBackend = async () => {
       const { data } = await supabase.auth.getSession();
       const user = data?.session?.user;
 
       if (!user) return;
+
+      // منع الـ Infinite Loop: لو المستخدم واقف فعلياً في الداشبورد أو الأدمن مش هنعمل Redirect تاني
+      const currentPath = window.location.pathname;
+      if (currentPath.startsWith('/dashboard') || currentPath.startsWith('/admin') || currentPath.startsWith('/instructor')) {
+        return; 
+      }
 
       try {
         const res = await api.post("/api/auth/google-login", { user });
@@ -146,16 +135,12 @@ export default function App() {
     getSessionAndSendToBackend();
   }, []);
 
-  /* =======================
-     ROUTER
-  ======================= */
   const Router = createBrowserRouter([
     { path: "/", element: <Home /> },
     { path: "/login", element: <Login /> },
     { path: "/register", element: <Register /> },
     { path: "/course-details", element: <CourseDetails /> },
     { path: "/register-job", element: <RegisterJob /> },
-
     {
       path: "/payment",
       element: (
@@ -164,7 +149,6 @@ export default function App() {
         </ProtectedRoute>
       ),
     },
-
     {
       path: "/instructor",
       element: (
@@ -180,7 +164,6 @@ export default function App() {
         { path: "profile", element: <InstructorDashboardProfile /> }
       ]
     },
-
     {
       path: "/admin",
       element: (
@@ -195,7 +178,6 @@ export default function App() {
         { path: "lessons", element: <AdminLessons /> }
       ]
     },
-
     {
       path: "/dashboard",
       element: (
