@@ -294,3 +294,13 @@
     justify-content: center;
   }
 }
+.message {
+  padding: 20px;
+  color: var(--text-secondary);
+}
+
+.error {
+  padding: 20px;
+  color: #ef4444;
+  font-weight: 600;
+}
