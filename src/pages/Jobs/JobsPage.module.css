@@ -1,0 +1,59 @@
+.page {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 32px 28px;
+  min-height: 100vh;
+}
+
+.body {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 20px;
+  align-items: start;
+}
+
+.left {
+  min-width: 0;
+}
+
+.jobList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.right {
+  position: sticky;
+  top: 24px;
+}
+
+.empty {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 48px 24px;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 1024px) {
+  .body {
+    grid-template-columns: 1fr;
+  }
+  .right {
+    position: static;
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding: 16px 14px;
+  }
+  .body {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .right {
+    position: static;
+    width: 100%;
+  }
+}

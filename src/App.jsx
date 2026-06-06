@@ -25,7 +25,8 @@ import Career from './components/layout/Career Twin/Career';
 import Register from './components/layout/Register/Register'; 
 import { supabase } from "./components/layout/services/supabaseClient"; 
 import api from "./components/layout/services/Api";
-
+import Projects from "./pages/Projects/Projects.jsx"
+import Jobs from "./pages/Jobs/JobsPage.jsx"
 import AdminLayout from './components/Admin/AdminLayout';
 import AdminDashboard from './components/Admin/AdminDashboard';
 import AdminUsers from './components/Admin/AdminUsers';
@@ -75,7 +76,6 @@ const ProgressPage = () => (
 
 const Roadmap = () => <h1>Roadmap</h1>;
 const Chatbot = () => <h1>Chatbot</h1>;
-const Jobs = () => <h1>Jobs</h1>;
 const Login = () => <h1>Login</h1>;
 
 
@@ -146,6 +146,7 @@ export default function App() {
         { path: "profile", element: <Profile /> }, 
         { path: "roadmap", element: <Roadmap /> },
         { path: "chatbot", element: <Chatbot /> },
+          { path: "projects", element: <Projects /> },
         { path: "jobs", element: <Jobs /> },
         { path: "progress", element: <ProgressPage /> }, 
         { path: "softSkills", element: <SoftSkills /> },
