@@ -6,6 +6,7 @@ import PaymentForm from '../PaymentForm/PaymentForm';
 import OrderSummary from '../OrderSummary/OrderSummary';
 import Toast from '../Toast/Toast';
 import { useToast } from '../../../hooks/useToast';
+import { useAuth } from '../../../context/AuthContext';
 import { validateCardForm, parseCardholderName, initiatePaymobPayment } from '../../../utils/paymob';
 import styles from './PaymentPage.module.css';
 
@@ -53,12 +54,15 @@ function SuccessState() {
       </motion.div>
       <h2 className={styles.successTitle}>Enrollment Confirmed!</h2>
       <p className={styles.successSub}>
-        Your payment was processed successfully.<br />Check your email for access details.
+        Your payment was processed successfully.<br />You now have access to the student dashboard.
       </p>
       <div className={styles.successDetails}>
-        <div className={styles.successBadge}>✓ Lifetime Access Granted</div>
+        <div className={styles.successBadge}>✓ Dashboard access enabled</div>
         <div className={styles.successBadge}>✓ Certificate Pending</div>
       </div>
+      <button className={styles.successHomeBtn} onClick={() => navigate('/dashboard/dashboard')}>
+        Go to Dashboard
+      </button>
       <button className={styles.successHomeBtn} onClick={() => navigate('/')}>
         Return to Home
       </button>
@@ -110,6 +114,8 @@ export default function PaymentPage() {
   const { toasts, toast, removeToast } = useToast();
   const formRef = useRef(null);
 
+  const { markPaid } = useAuth();
+
   const handlePay = async (formData) => {
     const { isValid, errors } = validateCardForm(formData);
     if (!isValid) {
@@ -140,6 +146,10 @@ export default function PaymentPage() {
 
       setIframeUrl(url);
       toast.success('Redirecting to secure payment…');
+      if (markPaid) {
+        markPaid();
+      }
+      setPaymentState('success');
     } catch (err) {
       console.error('Paymob error:', err);
       toast.error(err?.message || 'Payment initiation failed. Please try again.');

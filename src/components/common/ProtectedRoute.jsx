@@ -56,7 +56,7 @@ export default function ProtectedRoute({
   // 5. Dashboard requires payment (student only)
   //    job_seeker / instructor / admin always bypass this check
   if (requirePayment && role === 'student' && !hasPaid) {
-    return <Navigate to="/" state={{ showPaymentPrompt: true }} replace />;
+    return <Navigate to="/payment" state={{ from: location }} replace />;
   }
 
   return children;
