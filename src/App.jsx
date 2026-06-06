@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './styles/global.css'; 
+import './styles/global.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import ProfileHeader from "./components/Profileheader/Profileheader.jsx";
@@ -12,7 +12,7 @@ import Skills from "./components/Skills/Skills.jsx";
 import ProfileMetrics from "./components/Progress/ProfileMetrics.jsx";
 import XPGrowth from "./components/Progress/XPGrowth.jsx";
 import CourseCompletion from "./components/Progress/CourseCompletion.jsx";
-import ProgressperCourse from './components/Progress/ProgressperCourse'; 
+import ProgressperCourse from './components/Progress/ProgressperCourse';
 import DailyLearningHours from './components/Progress/DailyLearningHours';
 
 import Home from './pages/Home';
@@ -22,8 +22,10 @@ import Ranking from './pages/Ranking/Ranking';
 import Layout from './components/layout/Layout';
 import Dashboard from './components/layout/Dashboard/Dashboard';
 import Career from './components/layout/Career Twin/Career';
-import Register from './components/layout/Register/Register'; 
-import { supabase } from "./components/layout/services/supabaseClient"; 
+import Register from './components/layout/Register/Register';
+import RegisterJob from "./components/layout/Register/JobRegister";
+
+import { supabase } from "./components/layout/services/supabaseClient";
 import api from "./components/layout/services/Api";
 
 import AdminLayout from './components/Admin/AdminLayout';
@@ -38,16 +40,8 @@ import InstructorDashboardCourses from "./components/InstructorDashboard/Instruc
 import InstructorDashboardInteractiveSessions from "./components/InstructorDashboard/InstructorDashboardInteractiveSessions/InstructorDashboardInteractiveSessions";
 import InstructorDashboardLessons from "./components/InstructorDashboard/InstructorDashboardLessons/InstructorDashboardLessons";
 import InstructorDashboardProfile from "./components/InstructorDashboard/InstructorDashboardProfile/InstructorDashboardProfile";
+
 import CourseDetails from './pages/CourseDetails/CourseDetails';
-
-import RegisterJob from "./components/layout/Register/JobRegister";
-import LiveSession from './components/LiveSessions/LiveSession';
-
-const Profile = () => <h1>Profile</h1>
-const Roadmap = () => <h1>Roadmap</h1>
-const Chatbot = () => <h1>Chatbot</h1>
-const Jobs = () => <h1>Jobs</h1>
-const Progress = () => <h1>Progress</h1>
 import LiveSession from './components/LiveSessions/LiveSession';
 
 const Profile = () => (
@@ -55,7 +49,7 @@ const Profile = () => (
     <div className="container d-flex flex-column justify-content-between" style={{ minHeight: "calc(100vh - 80px)" }}>
       <div className="d-flex flex-column gap-4 mb-4">
         <div><ProfileHeader /></div>
-        <div className="row g-4 m-0"> 
+        <div className="row g-4 m-0">
           <div className="col-12 col-lg-7 p-0 pe-lg-3"><PersonalInformation /></div>
           <div className="col-12 col-lg-5 p-0 d-flex flex-column gap-4">
             <SocialLinks />
@@ -82,13 +76,12 @@ const ProgressPage = () => (
   </div>
 );
 
+const Login = () => <h1>Login</h1>;
+const Landingpage = () => <h1>Landing Page</h1>;
 const Roadmap = () => <h1>Roadmap</h1>;
 const Chatbot = () => <h1>Chatbot</h1>;
 const Jobs = () => <h1>Jobs</h1>;
-const Login = () => <h1>Login</h1>;
 
-
-const Landingpage = () => <h1>Landing Page</h1>
 export default function App() {
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem('ct-theme') || 'dark';
@@ -112,109 +105,72 @@ export default function App() {
         const res = await api.post("/api/auth/google-login", { user });
         const result = res.data;
 
-        console.log("BACKEND RESPONSE:", result);
-
         const role = result?.user?.role;
+
         if (role === "admin") {
           window.location.href = "/admin";
         } else if (role === "instructor") {
           window.location.href = "/instructor";
         } else {
-          window.location.href = "/dashboard/dashboard"; 
+          window.location.href = "/dashboard/dashboard";
         }
       } catch (error) {
-        console.error("Error sending token to backend:", error);
+        console.error(error);
       }
     };
 
     getSessionAndSendToBackend();
   }, []);
 
-const Router = createBrowserRouter([
+  const Router = createBrowserRouter([
     { path: "/", element: <Home theme={theme} toggleTheme={toggleTheme} /> },
     { path: "/test", element: <h1>Test Page</h1> },
     { path: "/payment", element: <Payment /> },
     { path: "/register", element: <Register /> },
     { path: "/login", element: <Login /> },
-    {path: "/course-details", element: <CourseDetails />},
-    { path: "/register-job", element: <RegisterJob />},
+    { path: "/course-details", element: <CourseDetails /> },
+    { path: "/register-job", element: <RegisterJob /> },
 
     {
       path: "/instructor",
       element: <InstructorDashboardLayout />,
       children: [
-        { path: "dashboard", element:<InstructorDashboardDashboard/> },
+        { path: "dashboard", element: <InstructorDashboardDashboard /> },
         { path: "courses", element: <InstructorDashboardCourses /> },
-        { path: "lessons", element: <InstructorDashboardLessons /> },  
-        {
-          path: "interactive-sessions",
-          element: <InstructorDashboardInteractiveSessions />,
-        },
-        { path: "profile", element: <InstructorDashboardProfile /> },
-      ],
+        { path: "lessons", element: <InstructorDashboardLessons /> },
+        { path: "interactive-sessions", element: <InstructorDashboardInteractiveSessions /> },
+        { path: "profile", element: <InstructorDashboardProfile /> }
+      ]
     },
+
     {
       path: "/admin",
       element: <AdminLayout />,
-    { path: "/login", element: <Login /> },
-    { 
-      path: "/instructor", 
-      element: <InstructorDashboardLayout />, 
-      children: [
-        { path: "dashboard", element: <InstructorDashboardDashboard /> },
-        { path: "courses", element: <InstructorDashboardCourses /> },
-        { path: "lessons", element: <InstructorDashboardLessons /> },  
-        { path: "interactive-sessions", element: <InstructorDashboardInteractiveSessions /> },
-        { path: "profile", element: <InstructorDashboardProfile /> },
-      ]
-    },
-
-
-    {
-      path: "/dashboard",
-      element: <Layout />, children: [
-
-    { 
-      path: "/dashboard", 
-      element: <Layout />, 
-      children: [
-
-        { path: "dashboard", element: <Dashboard /> },
-        { path: "profile", element: <Profile /> }, 
-        { path: "roadmap", element: <Roadmap /> },
-        { path: "chatbot", element: <Chatbot /> },
-        { path: "jobs", element: <Jobs /> },
-        { path: "progress", element: <ProgressPage /> }, 
-        { path: "softSkills", element: <SoftSkills /> },
-        { path: "ranking", element: <Ranking /> },
-        { path: "careertwin", element: <Career /> },
-        { path: "live-session", element: <LiveSession /> },
-      ]
-    },
-
-
-    {
-      path: "/admin",
-      element: <AdminLayout />,children: [
-        { path: "", element: <AdminDashboard />},
-        {path: "users", element: <AdminUsers />},
-        {path: "courses", element: <AdminCourses />},
-        {path: "lessons", element: <AdminLessons />}
-      ]}
-
-    { 
-      path: "/admin", 
-      element: <AdminLayout />, 
       children: [
         { path: "", element: <AdminDashboard /> },
         { path: "users", element: <AdminUsers /> },
         { path: "courses", element: <AdminCourses /> },
         { path: "lessons", element: <AdminLessons /> }
       ]
-    }
+    },
 
+    {
+      path: "/dashboard",
+      element: <Layout />,
+      children: [
+        { path: "dashboard", element: <Dashboard /> },
+        { path: "profile", element: <Profile /> },
+        { path: "roadmap", element: <Roadmap /> },
+        { path: "chatbot", element: <Chatbot /> },
+        { path: "jobs", element: <Jobs /> },
+        { path: "progress", element: <ProgressPage /> },
+        { path: "softSkills", element: <SoftSkills /> },
+        { path: "ranking", element: <Ranking /> },
+        { path: "careertwin", element: <Career /> },
+        { path: "live-session", element: <LiveSession /> }
+      ]
+    }
   ]);
-  return (
-    <RouterProvider router={Router} />
-  );
+
+  return <RouterProvider router={Router} />;
 }
