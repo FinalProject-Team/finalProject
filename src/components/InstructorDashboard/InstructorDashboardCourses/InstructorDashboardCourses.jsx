@@ -1,37 +1,15 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Plus, Search, Edit, Trash2, X } from "lucide-react";
+import { getInstructorCourses } from "../../../services/api/instructorService";
 import styles from "./InstructorDashboardCourses.module.css";
 
 function InstructorDashboardCourses() {
   const [searchTerm, setSearchTerm] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const [courses, setCourses] = useState([
-    {
-      id: 1,
-      title: "React Masterclass",
-      description: "Complete guide to React development",
-      price: 99.99,
-      category: "Web Development",
-      level: "Intermediate",
-    },
-    {
-      id: 2,
-      title: "JavaScript Fundamentals",
-      description: "Learn JavaScript from scratch",
-      price: 49.99,
-      category: "Programming",
-      level: "Beginner",
-    },
-    {
-      id: 3,
-      title: "Node.js Backend Development",
-      description: "Build scalable backend applications",
-      price: 119.99,
-      category: "Backend",
-      level: "Advanced",
-    },
-  ]);
+  const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   const [formData, setFormData] = useState({
     title: "",
@@ -41,15 +19,32 @@ function InstructorDashboardCourses() {
     level: "",
   });
 
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        setLoading(true);
+
+        const response = await getInstructorCourses();
+
+        setCourses(response || []);
+      } catch (err) {
+        console.error(err);
+        setError("Failed to load courses");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCourses();
+  }, []);
+
   const filteredCourses = useMemo(() => {
     return courses.filter((course) => {
       const value = searchTerm.toLowerCase();
 
       return (
-        course.title.toLowerCase().includes(value) ||
-        course.description.toLowerCase().includes(value) ||
-        course.category.toLowerCase().includes(value) ||
-        course.level.toLowerCase().includes(value)
+        (course.title || "").toLowerCase().includes(value) ||
+        (course.description || "").toLowerCase().includes(value)
       );
     });
   }, [courses, searchTerm]);
@@ -89,7 +84,9 @@ function InstructorDashboardCourses() {
   };
 
   const handleDeleteCourse = (courseId) => {
-    setCourses((prev) => prev.filter((course) => course.id !== courseId));
+    setCourses((prev) =>
+      prev.filter((course) => course.id !== courseId)
+    );
   };
 
   return (
@@ -100,7 +97,10 @@ function InstructorDashboardCourses() {
           <p>Manage your courses and track their performance.</p>
         </div>
 
-        <button className={styles.addBtn} onClick={() => setIsModalOpen(true)}>
+        <button
+          className={styles.addBtn}
+          onClick={() => setIsModalOpen(true)}
+        >
           <Plus size={18} />
           Create Course
         </button>
@@ -116,65 +116,76 @@ function InstructorDashboardCourses() {
         />
       </div>
 
-      <div className={styles.tableWrapper}>
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <th>Course Title</th>
-              <th>Category</th>
-              <th>Level</th>
-              <th>Price</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
+      {loading && (
+        <div className={styles.message}>Loading courses...</div>
+      )}
 
-          <tbody>
-            {filteredCourses.map((course) => (
-              <tr key={course.id}>
-                <td>
-                  <strong>{course.title}</strong>
-                  <span>{course.description}</span>
-                </td>
+      {error && (
+        <div className={styles.error}>{error}</div>
+      )}
 
-                <td>{course.category}</td>
-
-                <td>
-                  <span className={`${styles.badge} ${styles[course.level.toLowerCase()]}`}>
-                    {course.level}
-                  </span>
-                </td>
-
-                <td>${course.price}</td>
-
-                <td>
-                  <div className={styles.actions}>
-                    <button>
-                      <Edit size={17} />
-                    </button>
-
-                    <button onClick={() => handleDeleteCourse(course.id)}>
-                      <Trash2 size={17} />
-                    </button>
-                  </div>
-                </td>
+      {!loading && !error && (
+        <div className={styles.tableWrapper}>
+          <table className={styles.table}>
+            <thead>
+              <tr>
+                <th>Course Title</th>
+                <th>Price</th>
+                <th>Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+
+            <tbody>
+              {filteredCourses.map((course) => (
+                <tr key={course.id}>
+                  <td>
+                    <strong>{course.title}</strong>
+                    <span>{course.description}</span>
+                  </td>
+
+                  <td>${course.price}</td>
+
+                  <td>
+                    <div className={styles.actions}>
+                      <button>
+                        <Edit size={17} />
+                      </button>
+
+                      <button
+                        onClick={() =>
+                          handleDeleteCourse(course.id)
+                        }
+                      >
+                        <Trash2 size={17} />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
 
       {isModalOpen && (
         <div className={styles.modalOverlay}>
           <div className={styles.modal}>
-            <button className={styles.closeBtn} onClick={() => setIsModalOpen(false)}>
+            <button
+              className={styles.closeBtn}
+              onClick={() => setIsModalOpen(false)}
+            >
               <X size={22} />
             </button>
 
             <h2>Create New Course</h2>
             <p>Add a new course to your catalog.</p>
 
-            <form className={styles.form} onSubmit={handleCreateCourse}>
+            <form
+              className={styles.form}
+              onSubmit={handleCreateCourse}
+            >
               <label>Course Title</label>
+
               <input
                 type="text"
                 name="title"
@@ -185,6 +196,7 @@ function InstructorDashboardCourses() {
               />
 
               <label>Description</label>
+
               <textarea
                 name="description"
                 placeholder="Enter course description"
@@ -193,44 +205,16 @@ function InstructorDashboardCourses() {
                 required
               />
 
-              <div className={styles.formRow}>
-                <div>
-                  <label>Price ($)</label>
-                  <input
-                    type="number"
-                    name="price"
-                    placeholder="99.99"
-                    value={formData.price}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
+              <label>Price ($)</label>
 
-                <div>
-                  <label>Category</label>
-                  <input
-                    type="text"
-                    name="category"
-                    placeholder="e.g. Web Development"
-                    value={formData.category}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-              </div>
-
-              <label>Level</label>
-              <select
-                name="level"
-                value={formData.level}
+              <input
+                type="number"
+                name="price"
+                placeholder="99.99"
+                value={formData.price}
                 onChange={handleChange}
                 required
-              >
-                <option value="">Select level</option>
-                <option value="Beginner">Beginner</option>
-                <option value="Intermediate">Intermediate</option>
-                <option value="Advanced">Advanced</option>
-              </select>
+              />
 
               <div className={styles.modalActions}>
                 <button
@@ -241,7 +225,10 @@ function InstructorDashboardCourses() {
                   Cancel
                 </button>
 
-                <button type="submit" className={styles.submitBtn}>
+                <button
+                  type="submit"
+                  className={styles.submitBtn}
+                >
                   Create Course
                 </button>
               </div>

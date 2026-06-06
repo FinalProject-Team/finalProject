@@ -95,15 +95,12 @@ export default function App() {
      path: "/instructor",
      element: <InstructorDashboardLayout />,
      children: [
-       { path: "dashboard", element:<InstructorDashboardDashboard/> },
+       { path: "", element:<InstructorDashboardDashboard/> },
+       { path: "dashboard", element: <InstructorDashboardDashboard /> },
        { path: "courses", element: <InstructorDashboardCourses /> },
-        { path: "lessons", element: <InstructorDashboardLessons /> },  
-        {
-          path: "interactive-sessions",
-           element: <InstructorDashboardInteractiveSessions />,
-          },
-          { path: "profile", element: <InstructorDashboardProfile /> },
-         
+       { path: "lessons", element: <InstructorDashboardLessons /> },  
+       { path: "interactive-sessions",   element: <InstructorDashboardInteractiveSessions />},
+       { path: "profile", element: <InstructorDashboardProfile /> },
       ],
       },
     {

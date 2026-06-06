@@ -13,7 +13,7 @@ export default function Courses() {
     const fetchCourses = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`https://final-project-backend-production-5fe7.up.railway.app/api/courses`);
+      const response = await axios.get('https://final-project-backend-production-214a.up.railway.app/api/courses');
         const data = Array.isArray(response.data) ? response.data : [];
         setCourses(data.filter(c => c.title));
       } catch (err) {

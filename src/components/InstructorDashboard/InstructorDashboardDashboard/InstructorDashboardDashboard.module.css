@@ -16,6 +16,18 @@
   color: var(--text-secondary);
 }
 
+.loading {
+  color: var(--accent-cyan);
+  margin-bottom: 16px;
+  font-weight: 600;
+}
+
+.error {
+  color: #ef4444;
+  margin-bottom: 16px;
+  font-weight: 600;
+}
+
 .statsGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
