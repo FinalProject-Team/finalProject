@@ -22,7 +22,18 @@ const FALLBACK_IMAGES = {
 };
 
 export default function ProjectCard({ project, index = 0 }) {
-  const { title, description, status, progress, techStack, image, githubUrl, liveUrl, category, stars } = project;
+ const {
+  title,
+  description,
+  status,
+  progress,
+  techStack,
+  image,
+  github_link,
+  live_demo,
+  category,
+  stars
+} = project;
 
   const displayImage = image || FALLBACK_IMAGES[category] || FALLBACK_IMAGES.default;
 
@@ -101,7 +112,10 @@ export default function ProjectCard({ project, index = 0 }) {
         <div className={styles.footer}>
           <div className={styles.divider} />
           <ProgressBar progress={progress} status={status} />
-          <ProjectActions githubUrl={githubUrl} liveUrl={liveUrl} />
+         <ProjectActions
+  githubUrl={github_link}
+  liveUrl={live_demo}
+/>
         </div>
       </div>
     </article>

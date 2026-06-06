@@ -77,7 +77,7 @@ export default function Projects() {
       <div className={styles.inner}>
 
         
-        {/* ── Heading ── */}
+        {/* ── Heading ──
         <div className={styles.pageHeading}>
           <div className={styles.breadcrumb}>
             <span>Home</span>
@@ -92,7 +92,7 @@ export default function Projects() {
               </p>
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* ── Stats Grid ── */}
         {stats && (

@@ -3,7 +3,7 @@ import styles from './ProjectActions.module.css';
 export default function ProjectActions({ githubUrl, liveUrl }) {
   return (
     <div className={styles.actions}>
-      <a
+      {/* <a
         href={liveUrl || '#'}
         target={liveUrl ? '_blank' : undefined}
         rel="noopener noreferrer"
@@ -12,7 +12,7 @@ export default function ProjectActions({ githubUrl, liveUrl }) {
       >
         <span>⊙</span>
         View Project
-      </a>
+      </a> */}
       <a
         href={githubUrl || '#'}
         target={githubUrl ? '_blank' : undefined}
