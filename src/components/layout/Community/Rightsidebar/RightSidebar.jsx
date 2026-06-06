@@ -2,7 +2,7 @@ import { useState } from "react";
 import styles from "./RightSidebar.module.css";
 import { SideWidgetSkeleton } from "../Skeletons/Skeletons";
 import { useFetch } from "../../../../hooks/useFetch";
-import { getLeaderboard } from "../../../../services/api/communityApi";
+import { getLeaderboard } from "../../../../api/communityApi";
 import { RiFireLine } from "react-icons/ri";
 import { BsCalendarEvent, BsTrophy, BsPersonPlus } from "react-icons/bs";
 import {TRENDING_TOPICS} from "../../../../data/communityData";
