@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/global.css'; 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
+/* Components & Pages Imports */
 import ProfileHeader from "./components/Profileheader/Profileheader.jsx";
 import PersonalInformation from "./components/PersonalInformation/PersonalInformation.jsx";
 import SocialLinks from "./components/SocialLinks/SocialLinks.jsx";
@@ -43,13 +44,9 @@ import CourseDetails from './pages/CourseDetails/CourseDetails';
 import RegisterJob from "./components/layout/Register/JobRegister";
 import LiveSession from './components/LiveSessions/LiveSession';
 
-const Profile = () => <h1>Profile</h1>
-const Roadmap = () => <h1>Roadmap</h1>
-const Chatbot = () => <h1>Chatbot</h1>
-const Jobs = () => <h1>Jobs</h1>
-const Progress = () => <h1>Progress</h1>
-import LiveSession from './components/LiveSessions/LiveSession';
-
+/* =======================
+   PROFILE PAGE
+======================= */
 const Profile = () => (
   <div style={{ background: "#0B0F19", minHeight: "100vh", width: "100%", padding: "40px 0", color: "white" }}>
     <div className="container d-flex flex-column justify-content-between" style={{ minHeight: "calc(100vh - 80px)" }}>
@@ -68,6 +65,9 @@ const Profile = () => (
   </div>
 );
 
+/* =======================
+   PROGRESS PAGE
+======================= */
 const ProgressPage = () => (
   <div style={{ backgroundColor: '#060814', minHeight: '100vh', padding: '40px 20px', color: 'white' }}>
     <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '24px' }}>
@@ -82,13 +82,17 @@ const ProgressPage = () => (
   </div>
 );
 
+/* =======================
+   SIMPLE PAGES
+======================= */
 const Roadmap = () => <h1>Roadmap</h1>;
 const Chatbot = () => <h1>Chatbot</h1>;
 const Jobs = () => <h1>Jobs</h1>;
 const Login = () => <h1>Login</h1>;
 
-
-const Landingpage = () => <h1>Landing Page</h1>
+/* =======================
+   MAIN APP COMPONENT
+======================= */
 export default function App() {
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem('ct-theme') || 'dark';
@@ -130,55 +134,31 @@ export default function App() {
     getSessionAndSendToBackend();
   }, []);
 
-const Router = createBrowserRouter([
+  const Router = createBrowserRouter([
     { path: "/", element: <Home theme={theme} toggleTheme={toggleTheme} /> },
     { path: "/test", element: <h1>Test Page</h1> },
     { path: "/payment", element: <Payment /> },
     { path: "/register", element: <Register /> },
     { path: "/login", element: <Login /> },
-    {path: "/course-details", element: <CourseDetails />},
-    { path: "/register-job", element: <RegisterJob />},
+    { path: "/course-details", element: <CourseDetails /> },
+    { path: "/register-job", element: <RegisterJob /> },
 
     {
       path: "/instructor",
       element: <InstructorDashboardLayout />,
-      children: [
-        { path: "dashboard", element:<InstructorDashboardDashboard/> },
-        { path: "courses", element: <InstructorDashboardCourses /> },
-        { path: "lessons", element: <InstructorDashboardLessons /> },  
-        {
-          path: "interactive-sessions",
-          element: <InstructorDashboardInteractiveSessions />,
-        },
-        { path: "profile", element: <InstructorDashboardProfile /> },
-      ],
-    },
-    {
-      path: "/admin",
-      element: <AdminLayout />,
-    { path: "/login", element: <Login /> },
-    { 
-      path: "/instructor", 
-      element: <InstructorDashboardLayout />, 
       children: [
         { path: "dashboard", element: <InstructorDashboardDashboard /> },
         { path: "courses", element: <InstructorDashboardCourses /> },
         { path: "lessons", element: <InstructorDashboardLessons /> },  
         { path: "interactive-sessions", element: <InstructorDashboardInteractiveSessions /> },
         { path: "profile", element: <InstructorDashboardProfile /> },
-      ]
+      ],
     },
-
-
+    
     {
       path: "/dashboard",
-      element: <Layout />, children: [
-
-    { 
-      path: "/dashboard", 
       element: <Layout />, 
       children: [
-
         { path: "dashboard", element: <Dashboard /> },
         { path: "profile", element: <Profile /> }, 
         { path: "roadmap", element: <Roadmap /> },
@@ -192,16 +172,6 @@ const Router = createBrowserRouter([
       ]
     },
 
-
-    {
-      path: "/admin",
-      element: <AdminLayout />,children: [
-        { path: "", element: <AdminDashboard />},
-        {path: "users", element: <AdminUsers />},
-        {path: "courses", element: <AdminCourses />},
-        {path: "lessons", element: <AdminLessons />}
-      ]}
-
     { 
       path: "/admin", 
       element: <AdminLayout />, 
@@ -212,8 +182,8 @@ const Router = createBrowserRouter([
         { path: "lessons", element: <AdminLessons /> }
       ]
     }
-
   ]);
+
   return (
     <RouterProvider router={Router} />
   );
