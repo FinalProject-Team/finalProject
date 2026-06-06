@@ -157,17 +157,22 @@ export default function App() {
     { path: "/register-job", element: <RegisterJob /> },
 
     {
-      path: "/instructor",
-      element: <InstructorDashboardLayout />,
-      children: [
-        { path: "dashboard", element: <InstructorDashboardDashboard /> },
-        { path: "courses", element: <InstructorDashboardCourses /> },
-        { path: "lessons", element: <InstructorDashboardLessons /> },
-        { path: "interactive-sessions", element: <InstructorDashboardInteractiveSessions /> },
-        { path: "profile", element: <InstructorDashboardProfile /> }
-      ]
-    },
-
+{
+  path: "/course-details",
+  element: <CourseDetails />
+},
+{
+  path: "/instructor",
+  element: <InstructorDashboardLayout />,
+  children: [
+    { path: "", element: <InstructorDashboardDashboard /> },
+    { path: "dashboard", element: <InstructorDashboardDashboard /> },
+    { path: "courses", element: <InstructorDashboardCourses /> },
+    { path: "lessons", element: <InstructorDashboardLessons /> },
+    { path: "interactive-sessions", element: <InstructorDashboardInteractiveSessions /> },
+    { path: "profile", element: <InstructorDashboardProfile /> }
+  ]
+},
     {
       path: "/admin",
       element: <AdminLayout />,
