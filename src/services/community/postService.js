@@ -1,3 +1,9 @@
+// ❌ STATIC DATA — all functions return mock data from communityData.js with simulated delays
+// TODO: Replace each function body with real axios calls:
+//   fetchPosts()   → GET /api/posts
+//   createPost()   → POST /api/posts
+//   likePost()     → PATCH /api/posts/:id/like
+//   deletePost()   → DELETE /api/posts/:id
 // ═══════════════════════════════════════════════════════
 //  Post Service — all post-related API calls
 //  Currently returns mock data.
@@ -5,7 +11,7 @@
 //        once the backend is ready.
 // ═══════════════════════════════════════════════════════
 
-import { POSTS_DATA } from "../data/communityData";
+import { POSTS_DATA } from "../../data/communityData";
 
 const DELAY = (ms) => new Promise((r) => setTimeout(r, ms));
 
