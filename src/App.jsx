@@ -13,7 +13,7 @@ import Dashboard from './components/layout/Dashboard/Dashboard';
 import Career from './components/layout/Career Twin/Career';
 import Register from './components/layout/Register/Register';
 import RegisterJob from "./components/layout/Register/JobRegister";
-import Payment from './pages/Payment';
+import Login from "./pages/"
 import CourseDetails from './pages/CourseDetails/CourseDetails';
 import LiveSession from './components/LiveSessions/LiveSession';
 import CommunityPage from './pages/Community';
@@ -101,7 +101,6 @@ const ProgressPage = () => (
 /* =======================
    SIMPLE PAGES
 ======================= */
-const Login = () => <h1>Login</h1>;
 const Landingpage = () => <h1>Landing Page</h1>;
 const Roadmap = () => <h1>Roadmap</h1>;
 const Chatbot = () => <h1>Chatbot</h1>;
@@ -156,23 +155,23 @@ export default function App() {
     { path: "/course-details", element: <CourseDetails /> },
     { path: "/register-job", element: <RegisterJob /> },
 
+
     {
-{
-  path: "/course-details",
-  element: <CourseDetails />
-},
-{
-  path: "/instructor",
-  element: <InstructorDashboardLayout />,
-  children: [
-    { path: "", element: <InstructorDashboardDashboard /> },
-    { path: "dashboard", element: <InstructorDashboardDashboard /> },
-    { path: "courses", element: <InstructorDashboardCourses /> },
-    { path: "lessons", element: <InstructorDashboardLessons /> },
-    { path: "interactive-sessions", element: <InstructorDashboardInteractiveSessions /> },
-    { path: "profile", element: <InstructorDashboardProfile /> }
-  ]
-},
+      path: "/course-details",
+      element: <CourseDetails />
+    },
+    {
+      path: "/instructor",
+      element: <InstructorDashboardLayout />,
+      children: [
+        { path: "", element: <InstructorDashboardDashboard /> },
+        { path: "dashboard", element: <InstructorDashboardDashboard /> },
+        { path: "courses", element: <InstructorDashboardCourses /> },
+        { path: "lessons", element: <InstructorDashboardLessons /> },
+        { path: "interactive-sessions", element: <InstructorDashboardInteractiveSessions /> },
+        { path: "profile", element: <InstructorDashboardProfile /> }
+      ]
+    },
     {
       path: "/admin",
       element: <AdminLayout />,
