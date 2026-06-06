@@ -43,12 +43,11 @@ export default function Register() {
 
   const [errors, setErrors] = useState({});
 
-  const [toastMessage, setToastMessage] = useState(""); // الستيت الجديدة للمسج
-  const [toastType, setToastType] = useState("");       // نوع المسج (success أو error)
-  
+  const [toastMessage, setToastMessage] = useState(""); 
+  const [toastType, setToastType] = useState("");       
+
   const navigate = useNavigate();
 
-  // تاييد يخلي المسج تختفي تلقائياً بعد 4 ثواني
 
   
   const [toastMessage, setToastMessage] = useState("");
