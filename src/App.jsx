@@ -180,17 +180,27 @@ const Router = createBrowserRouter([
 export default function App() {
   const [theme, setTheme] = useState(() => localStorage.getItem('ct-theme') || 'dark');
 
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('ct-theme', theme);
-  }, [theme]);
+ useEffect(() => {
+ const getSessionAndSendToBackend = async () => {
+ const { data } = await supabase.auth.getSession();
+ const user = data?.session?.user;
+ const pathname = window.location.pathname;
+
+ if (!user) return;
+ if (!['/', '/login', '/register'].includes(pathname)) return;
 
   const toggleTheme = () => setTheme(t => t === 'dark' ? 'light' : 'dark');
 
-  useEffect(() => {
-    const getSessionAndSendToBackend = async () => {
-      const { data } = await supabase.auth.getSession();
-      const user = data?.session?.user;
+ if (role === "admin") {
+ window.location.href = "/admin";
+ } else if (role === "instructor") {
+ window.location.href = "/instructor";
+ }
+ // Students stay on the current page until payment is completed
+ } catch (error) {
+ console.error(error);
+ }
+ };
 
       if (!user) return;
 
@@ -209,13 +219,77 @@ export default function App() {
     getSessionAndSendToBackend();
   }, []);
 
-  return (
-    <ThemeProvider>
-      <AuthProvider>
-        <PostsProvider>
-          <RouterProvider router={Router} />
-        </PostsProvider>
-      </AuthProvider>
-    </ThemeProvider>
-  );
+ const Router = createBrowserRouter([
+ { path: "/", element: <Home theme={theme} toggleTheme={toggleTheme} /> },
+ { path: "/payment", element: <Payment /> },
+ { path: "/register", element: <Register /> },
+ { path: "/login", element: <Login /> },
+ { path: "/course-details", element: <CourseDetails /> },
+ { path: "/register-job", element: <RegisterJob /> },
+
+{
+      path: '/payment',
+      element: (
+        <ProtectedRoute allowedRoles={['student']}>
+          <Payment />
+        </ProtectedRoute>
+      ),
+    },
+
+
+ {
+ path: "/instructor",
+ element: <InstructorDashboardLayout />,
+ children: [
+ { path: "dashboard", element: <InstructorDashboardDashboard /> },
+ { path: "courses", element: <InstructorDashboardCourses /> },
+ { path: "lessons", element: <InstructorDashboardLessons /> },
+ { path: "interactive-sessions", element: <InstructorDashboardInteractiveSessions /> },
+ { path: "profile", element: <InstructorDashboardProfile /> }
+ ]
+ },
+
+ {
+ path: "/admin",
+ element: <AdminLayout />,
+ children: [
+ { path: "", element: <AdminDashboard /> },
+ { path: "users", element: <AdminUsers /> },
+ { path: "courses", element: <AdminCourses /> },
+ { path: "lessons", element: <AdminLessons /> }
+ ]
+ },
+
+ {
+ path: "/dashboard",
+ element: (
+   <ProtectedRoute requirePayment={true}>
+     <Layout />
+   </ProtectedRoute>
+ ),
+ children: [
+ { path: "dashboard", element: <Dashboard /> },
+ { path: "profile", element: <Profile /> },
+ { path: "roadmap", element: <RoadmapPage /> },
+ { path: "chatbot", element: <Chatbot /> },
+ { path: "jobs", element: <Jobs /> },
+ { path: "progress", element: <ProgressPage /> },
+ { path: "softSkills", element: <SoftSkills /> },
+ { path: "ranking", element: <Ranking /> },
+ { path: "careertwin", element: <Career /> },
+ { path: "community", element: <CommunityPage /> },
+ { path: "live-session", element: <LiveSession /> }
+ ]
+ }
+ ]);
+
+ return (
+ <ThemeProvider>
+ <AuthProvider>
+ <PostsProvider>
+ <RouterProvider router={Router} />
+ </PostsProvider>
+ </AuthProvider>
+ </ThemeProvider>
+ );
 }
