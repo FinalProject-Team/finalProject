@@ -27,6 +27,8 @@ export default function Register() {
   });
 
   const [errors, setErrors] = useState({});
+
+  // toast state (مرة واحدة فقط)
   const [toastMessage, setToastMessage] = useState("");
   const [toastType, setToastType] = useState("");
 
