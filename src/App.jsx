@@ -163,7 +163,7 @@ const Router = createBrowserRouter([
       { path: "profile", element: <Profile /> },
       { path: "roadmap", element: <RoadmapPage /> },
       { path: "chatbot", element: <Chatbot /> },
-      { path: "jobs", element: <Jobs /> },
+      
       { path: "progress", element: <ProgressPage /> },
       { path: "softSkills", element: <SoftSkills /> },
       { path: "ranking", element: <Ranking /> },
