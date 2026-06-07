@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/global.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
-/* Layout & Pages */
+/* Pages */
 import Home from './pages/Home';
 import SoftSkills from './pages/SoftSkills/SoftSkills';
 import Payment from './pages/Payment';
@@ -20,10 +20,6 @@ import Login from './pages/Login/Login';
 import RoadmapPage from './pages/Roadmap/RoadmapPage';
 import Chatbot from './pages/Chatbot/Chatbot';
 
-import { apiGoogleLogin } from './services/api/api';
-import ResetPasswordPage from './pages/ResetPassword/ResetPasswordPage';
-
-
 /* Admin */
 import AdminLayout from './components/Admin/AdminLayout';
 import AdminDashboard from './components/Admin/AdminDashboard';
@@ -39,15 +35,17 @@ import InstructorDashboardInteractiveSessions from "./components/InstructorDashb
 import InstructorDashboardLessons from "./components/InstructorDashboard/InstructorDashboardLessons/InstructorDashboardLessons";
 import InstructorDashboardProfile from "./components/InstructorDashboard/InstructorDashboardProfile/InstructorDashboardProfile";
 
-/* Profile Components */
+/* Common */
 import ProtectedRoute from './components/common/ProtectedRoute';
+
+/* Profile */
 import ProfileHeader from "./components/Profileheader/Profileheader.jsx";
 import PersonalInformation from "./components/PersonalInformation/PersonalInformation.jsx";
 import SocialLinks from "./components/SocialLinks/SocialLinks.jsx";
 import Documents from "./components/Documents/Documents.jsx";
 import Skills from "./components/Skills/Skills.jsx";
 
-/* Progress Components */
+/* Progress */
 import ProfileMetrics from "./components/Progress/ProfileMetrics.jsx";
 import XPGrowth from "./components/Progress/XPGrowth.jsx";
 import CourseCompletion from "./components/Progress/CourseCompletion.jsx";
@@ -62,119 +60,64 @@ import api from "./components/layout/services/Api";
 import { ThemeProvider } from './context/ThemeContext';
 import { PostsProvider } from './context/PostsContext';
 
-/* =======================
- PROFILE PAGE
-======================= */
 const Profile = () => (
- <div style={{ background: "hashtag#0B0F19", minHeight: "100vh", width: "100%", padding: "40px 0", color: "white" }}>
- <div className="container d-flex flex-column justify-content-between" style={{ minHeight: "calc(100vh - 80px)" }}>
- <div className="d-flex flex-column gap-4 mb-4">
- <div><ProfileHeader /></div>
- <div className="row g-4 m-0">
- <div className="col-12 col-lg-7 p-0 pe-lg-3">
- <PersonalInformation />
- </div>
- <div className="col-12 col-lg-5 p-0 d-flex flex-column gap-4">
- <SocialLinks />
- <Documents />
- </div>
- </div>
- </div>
- <div className="mt-auto">
- <Skills />
- </div>
- </div>
- </div>
+  <div style={{ background: "#0B0F19", minHeight: "100vh", width: "100%", padding: "40px 0", color: "white" }}>
+    <div className="container d-flex flex-column justify-content-between" style={{ minHeight: "calc(100vh - 80px)" }}>
+      <div className="d-flex flex-column gap-4 mb-4">
+        <ProfileHeader />
+        <div className="row g-4 m-0">
+          <div className="col-12 col-lg-7 p-0 pe-lg-3"><PersonalInformation /></div>
+          <div className="col-12 col-lg-5 p-0 d-flex flex-column gap-4">
+            <SocialLinks />
+            <Documents />
+          </div>
+        </div>
+      </div>
+      <div className="mt-auto"><Skills /></div>
+    </div>
+  </div>
 );
 
-/* =======================
- PROGRESS PAGE
-======================= */
 const ProgressPage = () => (
- <div style={{ backgroundColor: '#060814', minHeight: '100vh', padding: '40px 20px', color: 'white' }}>
- <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '24px' }}>
- <ProfileMetrics />
- <div className="charts-layout-grid">
- <XPGrowth />
- <CourseCompletion />
- </div>
- <ProgressperCourse />
- <DailyLearningHours />
- </div>
- </div>
+  <div style={{ backgroundColor: '#060814', minHeight: '100vh', padding: '40px 20px', color: 'white' }}>
+    <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+      <ProfileMetrics />
+      <div className="charts-layout-grid">
+        <XPGrowth />
+        <CourseCompletion />
+      </div>
+      <ProgressperCourse />
+      <DailyLearningHours />
+    </div>
+  </div>
 );
 
-/* =======================
- SIMPLE PAGES
-======================= */
-const Landingpage = () => <h1>Landing Page</h1>;
-const Jobs = () => <h1>Jobs</h1>;
-
-/* =======================
- APP
-======================= */
 export default function App() {
- const [theme, setTheme] = useState(() => {
- return localStorage.getItem('ct-theme') || 'dark';
- });
+  const [theme, setTheme] = useState(() => localStorage.getItem('ct-theme') || 'dark');
 
- useEffect(() => {
- document.documentElement.setAttribute('data-theme', theme);
- localStorage.setItem('ct-theme', theme);
- }, [theme]);
+  const toggleTheme = () => setTheme(t => t === 'dark' ? 'light' : 'dark');
 
- const toggleTheme = () => setTheme(t => t === 'dark' ? 'light' : 'dark');
-
- useEffect(() => {
- const getSessionAndSendToBackend = async () => {
- const { data } = await supabase.auth.getSession();
- const user = data?.session?.user;
- const pathname = window.location.pathname;
-
- if (!user) return;
- if (!['/', '/login', '/register'].includes(pathname)) return;
-
- try {
- const res = await api.post("/api/auth/google-login", { user });
- const role = res.data?.user?.role;
-
- if (role === "admin") {
- window.location.href = "/admin";
- } else if (role === "instructor") {
- window.location.href = "/instructor";
- }
- // Students stay on the current page until payment is completed
- } catch (error) {
- console.error(error);
- }
- };
-
- getSessionAndSendToBackend();
- }, []);
-
-
- // Google OAuth post-redirect handler
   useEffect(() => {
-    if (!supabase) return;
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        if (event !== 'SIGNED_IN' || !session?.user) return;
-        const provider = session.user.app_metadata?.provider;
-        if (provider !== 'google') return;
-        try {
-          const res = await apiGoogleLogin(session.user);
-          const r = res?.user?.role;
-          if (r === 'admin')           window.location.href = '/admin';
-          else if (r === 'instructor') window.location.href = '/instructor/dashboard';
-          else                         window.location.href = '/';  // students go home first
-        } catch {
-          window.location.href = '/dashboard/dashboard';
-        }
-      }
-    );
-    return () => subscription.unsubscribe();
-  }, []);
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('ct-theme', theme);
+  }, [theme]);
 
+  useEffect(() => {
+    const getSessionAndSendToBackend = async () => {
+      const { data } = await supabase.auth.getSession();
+      const user = data?.session?.user;
+
+      if (!user) return;
+
+      // منع الـ Infinite Loop: لو المستخدم واقف فعلياً في الداشبورد أو الأدمن مش هنعمل Redirect تاني
+      const currentPath = window.location.pathname;
+      if (currentPath.startsWith('/dashboard') || currentPath.startsWith('/admin') || currentPath.startsWith('/instructor')) {
+        return; 
+      }
+
+      try {
+        const res = await api.post("/api/auth/google-login", { user });
+        const role = res.data?.user?.role;
 
  const Router = createBrowserRouter([
  { path: "/", element: <Home theme={theme} toggleTheme={toggleTheme} /> },
@@ -185,8 +128,17 @@ export default function App() {
  { path: "/course-details/:id", element: <CourseDetails /> },
  { path: "/register-job", element: <RegisterJob /> },
 
-{
-      path: '/payment',
+    getSessionAndSendToBackend();
+  }, []);
+
+  const Router = createBrowserRouter([
+    { path: "/", element: <Home /> },
+    { path: "/login", element: <Login /> },
+    { path: "/register", element: <Register /> },
+    { path: "/course-details", element: <CourseDetails /> },
+    { path: "/register-job", element: <RegisterJob /> },
+    {
+      path: "/payment",
       element: (
         <ProtectedRoute allowedRoles={['student']}>
           <Payment />
