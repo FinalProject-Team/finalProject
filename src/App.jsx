@@ -92,6 +92,10 @@ export default function App() {
     element: <CourseDetails />
   },
      {
+     path: "/course/:id",
+     element: <CourseDetails />
+     },  
+     {
      path: "/instructor",
      element: <InstructorDashboardLayout />,
      children: [

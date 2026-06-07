@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+
 import Navbar from '../components/Navbar/Navbar';
 import Hero from '../components/Hero/Hero';
 import Stats from '../components/Stats/Stats';
@@ -8,6 +10,16 @@ import CTA from '../components/CTA/CTA';
 import Footer from '../components/Footer/Footer';
 
 export default function Home({ theme, toggleTheme }) {
+  useEffect(() => {
+    if (window.location.hash === "#courses") {
+      setTimeout(() => {
+        document
+          .getElementById("courses")
+          ?.scrollIntoView({ behavior: "auto" });
+      }, 0);
+    }
+  }, []);
+
   return (
     <>
       <Navbar theme={theme} toggleTheme={toggleTheme} />

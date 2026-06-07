@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import styles from './Courses.module.css';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -8,6 +9,7 @@ export default function Courses() {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -73,7 +75,11 @@ export default function Courses() {
 
       <div className={styles.grid}>
         {courses.map((course, index) => (
-          <div key={course.id} className={styles.card}>
+         <div
+          key={course.id}
+          className={styles.card}
+          onClick={() => navigate(`/course/${course.id}`)}
+>
             <div className={styles.cardImage}>
               <img src={course.thumbnail} alt={course.title} loading="lazy" />
               {course.course_type && <div className={styles.typeBadge}>{course.course_type}</div>}
@@ -108,7 +114,15 @@ export default function Courses() {
                 <div className={styles.price}>{formatPrice(course.price)}</div>
               </div>
 
-              <button className={styles.enrollBtn}>Enroll Now →</button>
+               <button
+                className={styles.enrollBtn}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate(`/payment/${course.id}`);
+                }}
+>
+           Enroll Now →
+           </button>
             </div>
           </div>
         ))}
