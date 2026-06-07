@@ -164,21 +164,20 @@ export default function App() {
         { path: "profile", element: <InstructorDashboardProfile /> }
       ]
     },
-    {
-      path: "/admin",
-      element: (
-        <ProtectedRoute allowedRoles={['admin']}>
-          <AdminLayout />
-        </ProtectedRoute>
-      ),
-      children: [
-        { path: "", element: <AdminDashboard /> },
-        { path: "users", element: <AdminUsers /> },
-        { path: "courses", element: <AdminCourses /> },
-        { path: "lessons", element: <AdminLessons /> }
-      ]
-    },
-    {
+    
+{
+  path: "/admin",
+  element: <AdminLayout />, 
+  children: [
+    { index: true, element: <AdminDashboard /> }, 
+    { path: "admindashboard", element: <AdminDashboard /> },
+    { path: "users", element: <AdminUsers /> },
+    { path: "courses", element: <AdminCourses /> },
+    { path: "lessons", element: <AdminLessons /> }
+  ]
+},   
+
+{
       path: "/dashboard",
       element: (
         <ProtectedRoute requirePayment={true}>
