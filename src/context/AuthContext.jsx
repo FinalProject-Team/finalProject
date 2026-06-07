@@ -19,22 +19,83 @@ const MOCK_USER = {
 
 const AuthContext = createContext(null);
 
+function buildUserPayload(signedUser) {
+  if (!signedUser) return null;
+  return {
+    id: signedUser.id,
+    email: signedUser.email,
+    role: signedUser.user_metadata?.role || "student",
+    avatar: signedUser.user_metadata?.avatar || MOCK_USER.avatar,
+    hasPaid: signedUser.user_metadata?.hasPaid ?? false,
+  };
+}
+
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const stored = localStorage.getItem("ct_auth_user");
-    if (stored) {
-      try { setUser(JSON.parse(stored)); } catch { /* ignore */ }
-    }
-    setLoading(false);
-  }, []);
-
   function persistUser(userData) {
     setUser(userData);
-    localStorage.setItem("ct_auth_user", JSON.stringify(userData));
+    if (userData) {
+      localStorage.setItem("ct_auth_user", JSON.stringify(userData));
+    } else {
+      localStorage.removeItem("ct_auth_user");
+    }
   }
+
+  useEffect(() => {
+    let mounted = true;
+    const restoreSession = async () => {
+      if (!supabase) {
+        const stored = localStorage.getItem("ct_auth_user");
+        if (stored) {
+          try { if (mounted) setUser(JSON.parse(stored)); } catch { }
+        }
+        if (mounted) setLoading(false);
+        return;
+      }
+
+      const { data } = await supabase.auth.getSession();
+      const signedUser = data?.session?.user;
+      if (signedUser) {
+        const payload = buildUserPayload(signedUser);
+        persistUser(payload);
+      } else {
+        const stored = localStorage.getItem("ct_auth_user");
+        if (stored) {
+          try { if (mounted) setUser(JSON.parse(stored)); } catch { }
+        }
+      }
+      if (mounted) setLoading(false);
+    };
+
+    restoreSession();
+
+    const authListener = supabase?.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' || event === 'USER_UPDATED') {
+        const signedUser = session?.user;
+        if (signedUser) {
+          const payload = buildUserPayload(signedUser);
+          persistUser(payload);
+        }
+      }
+
+      if (event === 'SIGNED_OUT') {
+        persistUser(null);
+      }
+    });
+
+    const subscription = authListener?.data?.subscription ?? authListener?.subscription ?? authListener;
+
+    return () => {
+      mounted = false;
+      if (subscription?.unsubscribe) {
+        subscription.unsubscribe();
+      } else if (typeof subscription === 'function') {
+        subscription();
+      }
+    };
+  }, []);
 
   async function signInWithEmail(email, password) {
     if (!supabase) {
@@ -60,17 +121,25 @@ export function AuthProvider({ children }) {
 
   async function signInWithGoogle() {
     if (!supabase) throw new Error("Auth service not configured");
-    const { error } = await supabase.auth.signInWithOAuth({
+    const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: { redirectTo: window.location.origin },
     });
     if (error) throw error;
+    return data;
   }
 
-  function markPaid() {
+  async function markPaid() {
     if (!user) return;
     const updated = { ...user, hasPaid: true };
     persistUser(updated);
+
+    if (supabase) {
+      const { error } = await supabase.auth.updateUser({ data: { hasPaid: true } });
+      if (error) {
+        console.warn('Unable to persist payment flag to Supabase:', error.message);
+      }
+    }
   }
 
   async function signOut() {
