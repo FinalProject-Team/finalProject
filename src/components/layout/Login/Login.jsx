@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, Navigate } from 'react-router-dom';
+import { useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -181,20 +181,22 @@ export default function Login() {
   const [authError, setAuthError]       = useState('');
   const [showForgot, setShowForgot]     = useState(false);
 
-  const { signInWithEmail, signInWithGoogle, isAuthenticated, getDashboardPath, loading } = useAuth();
-const navigate = useNavigate();
+  const { signInWithEmail, signInWithGoogle, isAuthenticated, loading } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
 
-const {
-  register,
-  handleSubmit,
-  formState: { errors },
-} = useForm({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
   resolver: yupResolver(loginSchema),
   mode: 'onTouched',
 });
 
 if (!loading && isAuthenticated) {
-  return <Navigate to={getDashboardPath()} replace />;
+  const redirectPath = location.state?.from?.pathname || '/';
+  return <Navigate to={redirectPath} replace />;
 }
 
   const onSubmit = async (data) => {
@@ -203,11 +205,13 @@ if (!loading && isAuthenticated) {
     try {
       const result = await signInWithEmail(data.email, data.password);
       const role = result?.backendRole;
-      const returnPath = sessionStorage.getItem('returnPath');
-      if (returnPath) { sessionStorage.removeItem('returnPath'); return navigate(returnPath); }
-      if (role === 'admin')      return navigate('/admin');
+      const returnPath = sessionStorage.getItem('returnPath') || location.state?.from?.pathname;
+      if (returnPath) {
+        sessionStorage.removeItem('returnPath');
+        return navigate(returnPath);
+      }
+      if (role === 'admin') return navigate('/admin');
       if (role === 'instructor') return navigate('/instructor/dashboard');
-      // Students and job_seekers go to home page first; dashboard unlocks after payment
       navigate('/');
     } catch (error) {
       setAuthError(
@@ -222,8 +226,14 @@ if (!loading && isAuthenticated) {
 
   const handleGoogleLogin = async () => {
     setAuthError('');
-    try { await signInWithGoogle(); }
-    catch (error) { setAuthError(error.message); }
+    try {
+      const result = await signInWithGoogle();
+      if (result?.url) {
+        window.location.assign(result.url);
+      }
+    } catch (error) {
+      setAuthError(error.message);
+    }
   };
 
   return (

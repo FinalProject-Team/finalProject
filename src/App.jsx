@@ -57,7 +57,6 @@ import { supabase } from "./components/layout/services/supabaseClient";
 import api from "./components/layout/services/Api";
 
 /* Context */
-import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { PostsProvider } from './context/PostsContext';
 
@@ -120,17 +119,14 @@ export default function App() {
         const res = await api.post("/api/auth/google-login", { user });
         const role = res.data?.user?.role;
 
-        if (role === "admin") {
-          window.location.href = "/admin";
-        } else if (role === "instructor") {
-          window.location.href = "/instructor";
-        } else {
-          window.location.href = "/dashboard/dashboard";
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
+ const Router = createBrowserRouter([
+ { path: "/", element: <Home theme={theme} toggleTheme={toggleTheme} /> },
+ { path: "/payment", element: <Payment /> },
+ { path: "/register", element: <Register /> },
+ { path: "/login", element: <Login /> },
+ { path: "/course-details", element: <CourseDetails /> },
+ { path: "/course-details/:id", element: <CourseDetails /> },
+ { path: "/register-job", element: <RegisterJob /> },
 
     getSessionAndSendToBackend();
   }, []);
@@ -149,64 +145,59 @@ export default function App() {
         </ProtectedRoute>
       ),
     },
-    {
-      path: "/instructor",
-      element: (
-        <ProtectedRoute allowedRoles={['instructor']}>
-          <InstructorDashboardLayout />
-        </ProtectedRoute>
-      ),
-      children: [
-        { path: "dashboard", element: <InstructorDashboardDashboard /> },
-        { path: "courses", element: <InstructorDashboardCourses /> },
-        { path: "lessons", element: <InstructorDashboardLessons /> },
-        { path: "interactive-sessions", element: <InstructorDashboardInteractiveSessions /> },
-        { path: "profile", element: <InstructorDashboardProfile /> }
-      ]
-    },
-    {
-      path: "/admin",
-      element: (
-        <ProtectedRoute allowedRoles={['admin']}>
-          <AdminLayout />
-        </ProtectedRoute>
-      ),
-      children: [
-        { path: "", element: <AdminDashboard /> },
-        { path: "users", element: <AdminUsers /> },
-        { path: "courses", element: <AdminCourses /> },
-        { path: "lessons", element: <AdminLessons /> }
-      ]
-    },
-    {
-      path: "/dashboard",
-      element: (
-        <ProtectedRoute requirePayment={true}>
-          <Layout />
-        </ProtectedRoute>
-      ),
-      children: [
-        { path: "dashboard", element: <Dashboard /> },
-        { path: "profile", element: <Profile /> },
-        { path: "roadmap", element: <RoadmapPage /> },
-        { path: "chatbot", element: <Chatbot /> },
-        { path: "progress", element: <ProgressPage /> },
-        { path: "softSkills", element: <SoftSkills /> },
-        { path: "ranking", element: <Ranking /> },
-        { path: "careertwin", element: <Career /> },
-        { path: "community", element: <CommunityPage /> },
-        { path: "live-session", element: <LiveSession /> }
-      ]
-    }
-  ]);
 
-  return (
-    <ThemeProvider>
-      <AuthProvider>
-        <PostsProvider>
-          <RouterProvider router={Router} />
-        </PostsProvider>
-      </AuthProvider>
-    </ThemeProvider>
-  );
+
+ {
+ path: "/instructor",
+ element: <InstructorDashboardLayout />,
+ children: [
+ { path: "dashboard", element: <InstructorDashboardDashboard /> },
+ { path: "courses", element: <InstructorDashboardCourses /> },
+ { path: "lessons", element: <InstructorDashboardLessons /> },
+ { path: "interactive-sessions", element: <InstructorDashboardInteractiveSessions /> },
+ { path: "profile", element: <InstructorDashboardProfile /> }
+ ]
+ },
+
+ {
+ path: "/admin",
+ element: <AdminLayout />,
+ children: [
+ { path: "", element: <AdminDashboard /> },
+ { path: "users", element: <AdminUsers /> },
+ { path: "courses", element: <AdminCourses /> },
+ { path: "lessons", element: <AdminLessons /> }
+ ]
+ },
+
+ {
+ path: "/dashboard",
+ element: (
+   <ProtectedRoute requirePayment={true}>
+     <Layout />
+   </ProtectedRoute>
+ ),
+ children: [
+ { path: "dashboard", element: <Dashboard /> },
+ { path: "profile", element: <Profile /> },
+ { path: "roadmap", element: <RoadmapPage /> },
+ { path: "chatbot", element: <Chatbot /> },
+ { path: "jobs", element: <Jobs /> },
+ { path: "progress", element: <ProgressPage /> },
+ { path: "softSkills", element: <SoftSkills /> },
+ { path: "ranking", element: <Ranking /> },
+ { path: "careertwin", element: <Career /> },
+ { path: "community", element: <CommunityPage /> },
+ { path: "live-session", element: <LiveSession /> }
+ ]
+ }
+ ]);
+
+ return (
+ <ThemeProvider>
+ <PostsProvider>
+ <RouterProvider router={Router} />
+ </PostsProvider>
+ </ThemeProvider>
+ );
 }
