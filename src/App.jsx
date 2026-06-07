@@ -59,7 +59,6 @@ import { supabase } from "./components/layout/services/supabaseClient";
 import api from "./components/layout/services/Api";
 
 /* Context */
-import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { PostsProvider } from './context/PostsContext';
 
@@ -183,6 +182,7 @@ export default function App() {
  { path: "/register", element: <Register /> },
  { path: "/login", element: <Login /> },
  { path: "/course-details", element: <CourseDetails /> },
+ { path: "/course-details/:id", element: <CourseDetails /> },
  { path: "/register-job", element: <RegisterJob /> },
 
 {
@@ -243,11 +243,9 @@ export default function App() {
 
  return (
  <ThemeProvider>
- <AuthProvider>
  <PostsProvider>
  <RouterProvider router={Router} />
  </PostsProvider>
- </AuthProvider>
  </ThemeProvider>
  );
 }
