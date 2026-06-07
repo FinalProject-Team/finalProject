@@ -145,59 +145,51 @@ export default function App() {
         </ProtectedRoute>
       ),
     },
+{
+  path: "/instructor",
+  element: (
+    <ProtectedRoute allowedRoles={['instructor']}>
+      <InstructorDashboardLayout />
+    </ProtectedRoute>
+  ),
+  children: [
+    { path: "dashboard", element: <InstructorDashboardDashboard /> },
+    { path: "courses", element: <InstructorDashboardCourses /> },
+    { path: "lessons", element: <InstructorDashboardLessons /> },
+    { path: "interactive-sessions", element: <InstructorDashboardInteractiveSessions /> },
+    { path: "profile", element: <InstructorDashboardProfile /> }
+  ]
+},
 
+{
+  path: "/admin",
+  element: <AdminLayout />,
+  children: [
+    { index: true, element: <AdminDashboard /> },
+    { path: "users", element: <AdminUsers /> },
+    { path: "courses", element: <AdminCourses /> },
+    { path: "lessons", element: <AdminLessons /> }
+  ]
+},
 
- {
- path: "/instructor",
- element: <InstructorDashboardLayout />,
- children: [
- { path: "dashboard", element: <InstructorDashboardDashboard /> },
- { path: "courses", element: <InstructorDashboardCourses /> },
- { path: "lessons", element: <InstructorDashboardLessons /> },
- { path: "interactive-sessions", element: <InstructorDashboardInteractiveSessions /> },
- { path: "profile", element: <InstructorDashboardProfile /> }
- ]
- },
-
- {
- path: "/admin",
- element: <AdminLayout />,
- children: [
- { path: "", element: <AdminDashboard /> },
- { path: "users", element: <AdminUsers /> },
- { path: "courses", element: <AdminCourses /> },
- { path: "lessons", element: <AdminLessons /> }
- ]
- },
-
- {
- path: "/dashboard",
- element: (
-   <ProtectedRoute requirePayment={true}>
-     <Layout />
-   </ProtectedRoute>
- ),
- children: [
- { path: "dashboard", element: <Dashboard /> },
- { path: "profile", element: <Profile /> },
- { path: "roadmap", element: <RoadmapPage /> },
- { path: "chatbot", element: <Chatbot /> },
- { path: "jobs", element: <Jobs /> },
- { path: "progress", element: <ProgressPage /> },
- { path: "softSkills", element: <SoftSkills /> },
- { path: "ranking", element: <Ranking /> },
- { path: "careertwin", element: <Career /> },
- { path: "community", element: <CommunityPage /> },
- { path: "live-session", element: <LiveSession /> }
- ]
- }
- ]);
-
- return (
- <ThemeProvider>
- <PostsProvider>
- <RouterProvider router={Router} />
- </PostsProvider>
- </ThemeProvider>
- );
+{
+  path: "/dashboard",
+  element: (
+    <ProtectedRoute requirePayment={true}>
+      <Layout />
+    </ProtectedRoute>
+  ),
+  children: [
+    { path: "dashboard", element: <Dashboard /> },
+    { path: "profile", element: <Profile /> },
+    { path: "roadmap", element: <RoadmapPage /> },
+    { path: "chatbot", element: <Chatbot /> },
+    { path: "jobs", element: <Jobs /> },
+    { path: "progress", element: <ProgressPage /> },
+    { path: "softSkills", element: <SoftSkills /> },
+    { path: "ranking", element: <Ranking /> },
+    { path: "careertwin", element: <Career /> },
+    { path: "community", element: <CommunityPage /> },
+    { path: "live-session", element: <LiveSession /> }
+  ]
 }
