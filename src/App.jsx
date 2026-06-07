@@ -12,6 +12,7 @@ import Dashboard from "./components/layout/Dashboard/Dashboard";
 import Career from "./components/layout/Career Twin/Career";
 import Register from "./components/layout/Register/Register";
 import RegisterJob from "./components/layout/Register/JobRegister";
+
 import CourseDetails from "./pages/CourseDetails/CourseDetails";
 import LiveSession from "./components/LiveSessions/LiveSession";
 import CommunityPage from "./pages/Community";
@@ -26,6 +27,17 @@ import AdminCourses from "./components/Admin/AdminCourses";
 import AdminLessons from "./components/Admin/AdminLessons";
 
 import InstructorDashboardLayout from "./components/InstructorDashboard/InstructorDashboardLayout/InstructorDashboardLayout";
+
+
+import { supabase } from "./components/layout/services/supabaseClient";
+import api from "./components/layout/services/Api";
+
+import Projects from "./pages/Projects/Projects.jsx";
+import Jobs from "./pages/Jobs/JobsPage.jsx";
+
+
+
+
 import InstructorDashboardDashboard from "./components/InstructorDashboard/InstructorDashboardDashboard/InstructorDashboardDashboard";
 import InstructorDashboardCourses from "./components/InstructorDashboard/InstructorDashboardCourses/InstructorDashboardCourses";
 import InstructorDashboardInteractiveSessions from "./components/InstructorDashboard/InstructorDashboardInteractiveSessions/InstructorDashboardInteractiveSessions";
@@ -87,6 +99,14 @@ const ProgressPage = () => (
   </div>
 );
 
+
+const Roadmap = () => <h1>Roadmap</h1>;
+const Chatbot = () => <h1>Chatbot</h1>;
+const Login = () => <h1>Login</h1>;
+
+
+const Landingpage = () => <h1>Landing Page</h1>
+
 export default function App() {
   const [theme, setTheme] = useState(() => localStorage.getItem("ct-theme") || "dark");
 
@@ -132,12 +152,13 @@ export default function App() {
   const Router = createBrowserRouter([
     { path: "/", element: <Home theme={theme} toggleTheme={toggleTheme} /> },
     { path: "/login", element: <Login /> },
+
     { path: "/register", element: <Register /> },
     { path: "/register-job", element: <RegisterJob /> },
 
-    { path: "/course-details", element: <CourseDetails /> },
+    
     { path: "/course-details/:id", element: <CourseDetails /> },
-    { path: "/course/:id", element: <CourseDetails /> },
+  
 
     {
       path: "/payment",
@@ -165,16 +186,7 @@ export default function App() {
       ],
     },
 
-    {
-      path: "/admin",
-      element: <AdminLayout />,
-      children: [
-        { index: true, element: <AdminDashboard /> },
-        { path: "users", element: <AdminUsers /> },
-        { path: "courses", element: <AdminCourses /> },
-        { path: "lessons", element: <AdminLessons /> },
-      ],
-    },
+  
 
     {
       path: "/dashboard",
@@ -200,4 +212,46 @@ export default function App() {
   ]);
 
   return <RouterProvider router={Router} />;
+
+
+
+{
+  path: "/payment",
+  element: (
+    <ProtectedRoute allowedRoles={['student']}>
+      <Payment />
+    </ProtectedRoute>
+  ),
+},
+
+
+
+{
+  path: "/instructor",
+  element: (
+    <ProtectedRoute allowedRoles={['instructor']}>
+      <InstructorDashboardLayout />
+    </ProtectedRoute>
+  ),
+  children: [
+    { path: "dashboard", element: <InstructorDashboardDashboard /> },
+    { path: "courses", element: <InstructorDashboardCourses /> },
+    { path: "lessons", element: <InstructorDashboardLessons /> },
+    { path: "interactive-sessions", element: <InstructorDashboardInteractiveSessions /> },
+    { path: "profile", element: <InstructorDashboardProfile /> }
+  ]
+},
+
+{
+  path: "/admin",
+  element: <AdminLayout />,
+  children: [
+    { index: true, element: <AdminDashboard /> },
+    { path: "users", element: <AdminUsers /> },
+    { path: "courses", element: <AdminCourses /> },
+    { path: "lessons", element: <AdminLessons /> }
+  ]
+}
+
+
 }
