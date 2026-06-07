@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import styles from './Courses.module.css';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -8,12 +9,13 @@ export default function Courses() {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCourses = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`https://final-project-backend-production-5fe7.up.railway.app/api/courses`);
+        const response = await axios.get(`https://final-project-backend-production-214a.up.railway.app/api/courses`);
         const data = Array.isArray(response.data) ? response.data : [];
         setCourses(data.filter(c => c.title));
       } catch (err) {
@@ -25,6 +27,12 @@ export default function Courses() {
     };
     fetchCourses();
   }, []);
+
+  const FALLBACK_THUMBNAILS = [
+    'https://via.placeholder.com/480x270?text=Course+1',
+    'https://via.placeholder.com/480x270?text=Course+2',
+    'https://via.placeholder.com/480x270?text=Course+3',
+  ];
 
   const getThumbnail = (course, index) =>
     course.thumbnail || FALLBACK_THUMBNAILS[index % FALLBACK_THUMBNAILS.length];
@@ -73,9 +81,14 @@ export default function Courses() {
 
       <div className={styles.grid}>
         {courses.map((course, index) => (
-          <div key={course.id} className={styles.card}>
-            <div className={styles.cardImage}>
-              <img src={course.thumbnail} alt={course.title} loading="lazy" />
+          <div
+            key={course.id}
+            className={styles.card}
+            onClick={() => navigate(`/course-details/${course.id}`)}
+            style={{ cursor: 'pointer' }}
+          >
+              <div className={styles.cardImage}>
+              <img src={getThumbnail(course, index)} alt={course.title} loading="lazy" />
               {course.course_type && <div className={styles.typeBadge}>{course.course_type}</div>}
               {course.level && <div className={styles.levelBadge}>{course.level}</div>}
             </div>
@@ -108,7 +121,23 @@ export default function Courses() {
                 <div className={styles.price}>{formatPrice(course.price)}</div>
               </div>
 
-              <button className={styles.enrollBtn}>Enroll Now →</button>
+                <button
+                  className={styles.enrollBtn}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    // remember to go to dashboard after payment when user enrolled from home
+                    try { sessionStorage.setItem('afterPayment', '/dashboard/dashboard'); } catch {}
+                    navigate('/payment', {
+                      state: {
+                        courseId: course.id,
+                        courseTitle: course.title,
+                        price: course.price,
+                      },
+                    });
+                  }}
+                >
+                  Enroll Now →
+                </button>
             </div>
           </div>
         ))}

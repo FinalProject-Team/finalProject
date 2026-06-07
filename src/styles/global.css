@@ -142,3 +142,41 @@ img { max-width: 100%; height: auto; display: block; }
 
 html { scroll-behavior: smooth; }
 ::selection { background: rgba(0, 200, 255, 0.25); color: var(--text-primary); }
+
+/* ===== COMMUNITY FEATURE CSS VARIABLES ===== */
+/* Used by Community components (dark theme already set globally) */
+:root,
+[data-theme="dark"] {
+  --bg-base:        #070d1a;
+  --bg-panel:       rgba(10,20,45,0.75);
+  --bg-card:        rgba(13,24,52,0.7);
+  --bg-input:       rgba(8,18,40,0.85);
+  --border:         rgba(79,142,247,0.15);
+  --border-active:  rgba(79,142,247,0.45);
+  --neon:           #4f8ef7;
+  --neon-glow:      0 0 18px rgba(79,142,247,0.45);
+  --text-primary:   #e8f0ff;
+  --text-secondary: #7a99cc;
+  --text-muted:     #3d5a8a;
+  --accent-green:   #34d399;
+  --accent-purple:  #a78bfa;
+  --accent-amber:   #fbbf24;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 22px;
+  --transition: 0.2s cubic-bezier(0.4,0,0.2,1);
+}
+
+[data-theme="light"] {
+  --bg-base:        #f0f4ff;
+  --bg-panel:       rgba(255,255,255,0.85);
+  --bg-card:        rgba(255,255,255,0.92);
+  --bg-input:       rgba(230,236,255,0.8);
+  --border:         rgba(79,142,247,0.18);
+  --border-active:  rgba(79,142,247,0.5);
+  --neon:           #2563eb;
+  --text-primary:   #0f172a;
+  --text-secondary: #334155;
+  --text-muted:     #64748b;
+}

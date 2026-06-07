@@ -13,8 +13,16 @@ function authHeaders() {
 // ─── AUTH ─────────────────────────────────────────────────────────────────────
 
 export async function apiLogin(email, password) {
+
   const res = await axios.post(`${BASE_URL}/api/auth/login`, { email, password });
   if (res.data?.token) localStorage.setItem('token', res.data.token);
+
+
+  console.log('LOGIN RESPONSE:', res.data);
+
+  
+
+
   return res.data;
 }
 
@@ -29,7 +37,17 @@ export async function apiGoogleLogin(user) {
 }
 
 export async function apiGetMe() {
-  const res = await axios.get(`${BASE_URL}/api/auth/me`, { headers: authHeaders() });
+  console.log('TOKEN BEFORE /ME:',
+    localStorage.getItem('token')
+  );
+
+  const res = await axios.get(
+    `${BASE_URL}/api/auth/me`,
+    {
+      headers: authHeaders()
+    }
+  );
+
   return res.data;
 }
 
@@ -38,11 +56,22 @@ export async function apiUpdateProfile(payload) {
   return res.data;
 }
 
+
+
 export async function apiRegister(payload) {
-  const res = await axios.post(`${BASE_URL}/api/auth/register`, payload);
+  const res = await axios.post(
+    `${BASE_URL}/api/auth/register`,
+    payload
+  );
+
+  console.log('REGISTER RESPONSE:', res.data);
+
+  if (res.data?.token) {
+    localStorage.setItem('token', res.data.token);
+  }
+
   return res.data;
 }
-
 // ─── COURSES ──────────────────────────────────────────────────────────────────
 
 export async function apiGetAllCourses() {

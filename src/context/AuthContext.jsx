@@ -1,6 +1,5 @@
 import { createContext, useContext, useEffect, useState, useRef } from 'react';
 import { supabase } from '../lib/supabaseClient';
-import { apiLogin, apiGoogleLogin, apiGetMe } from '../services/api/api';
 
 const AuthContext = createContext(null);
 
@@ -77,40 +76,60 @@ export function AuthProvider({ children }) {
     });
     if (error) throw error;
     return data;
+  }
+
+  async function markPaid() {
+    if (!user) return;
+    const updated = { ...user, hasPaid: true };
+    persistUser(updated);
+
+    if (supabase) {
+      const { error } = await supabase.auth.updateUser({ data: { hasPaid: true } });
+      if (error) {
+        console.warn('Unable to persist payment flag to Supabase:', error.message);
+      }
+    }
+  }
+
+  async function signOut() {
+    if (supabase) {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+    }
+    setUser(null);
+    localStorage.removeItem("ct_auth_user");
+  }
+
+  function getDashboardPath() {
+    if (!user) return "/";
+    if (user.role === "admin") return "/admin";
+    if (user.role === "instructor") return "/instructor/dashboard";
+    return "/dashboard/dashboard";
+  }
+
+  const authState = {
+    user,
+    loading,
+    isAuthenticated: Boolean(user),
+    role: user?.role ?? null,
+    hasPaid: user?.hasPaid ?? false,
+    roleLoading: false,
+    signInWithEmail,
+    signInWithGoogle,
+    signOut,
+    markPaid,
+    getDashboardPath,
   };
 
-  const signOut = async () => {
-    if (!supabase) throw new Error('Supabase not configured');
-    const { error } = await supabase.auth.signOut();
-    if (error) throw error;
-    setRole(null);
-    localStorage.removeItem('token');
-  };
-
-  // Helper: redirect to the right dashboard for a given role
-  const getDashboardPath = (r) => {
-    const resolved = r || role;
-    if (resolved === 'admin')      return '/admin';
-    if (resolved === 'instructor') return '/instructor/dashboard';
-    return '/dashboard/dashboard';
-  };
-
-  const value = {
-    user, session, role, loading, roleLoading,
-    signInWithEmail, signInWithGoogle, signOut,
-    getDashboardPath, fetchRole,
-    isAuthenticated: !!user,
-    isStudent:   role === 'student',
-    isJobSeeker: role === 'job_seeker',
-    isInstructor:role === 'instructor',
-    isAdmin:     role === 'admin',
-  };
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={authState}>
+      {children}
+    </AuthContext.Provider>
+  );
 }
 
 export function useAuth() {
-  const context = useContext(AuthContext);
-  if (!context) throw new Error('useAuth must be used inside AuthProvider');
-  return context;
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error("useAuth must be used inside <AuthProvider>");
+  return ctx;
 }

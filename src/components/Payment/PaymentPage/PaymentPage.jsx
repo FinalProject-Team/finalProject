@@ -1,11 +1,12 @@
-import { useState, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import BackgroundEffects from '../BackgroundEffects/BackgroundEffects';
 import PaymentForm from '../PaymentForm/PaymentForm';
 import OrderSummary from '../OrderSummary/OrderSummary';
 import Toast from '../Toast/Toast';
 import { useToast } from '../../../hooks/useToast';
+import { useAuth } from '../../../context/AuthContext';
 import { validateCardForm, parseCardholderName, initiatePaymobPayment } from '../../../utils/paymob';
 import styles from './PaymentPage.module.css';
 
@@ -53,12 +54,15 @@ function SuccessState() {
       </motion.div>
       <h2 className={styles.successTitle}>Enrollment Confirmed!</h2>
       <p className={styles.successSub}>
-        Your payment was processed successfully.<br />Check your email for access details.
+        Your payment was processed successfully.<br />You now have access to the student dashboard.
       </p>
       <div className={styles.successDetails}>
-        <div className={styles.successBadge}>✓ Lifetime Access Granted</div>
+        <div className={styles.successBadge}>✓ Dashboard access enabled</div>
         <div className={styles.successBadge}>✓ Certificate Pending</div>
       </div>
+      <button className={styles.successHomeBtn} onClick={() => navigate('/dashboard/dashboard')}>
+        Go to Dashboard
+      </button>
       <button className={styles.successHomeBtn} onClick={() => navigate('/')}>
         Return to Home
       </button>
@@ -107,8 +111,26 @@ export default function PaymentPage() {
   const [formErrors, setFormErrors] = useState({});
   const [paymentState, setPaymentState] = useState('idle');
   const [iframeUrl, setIframeUrl] = useState(null);
+  const [afterPaymentPath, setAfterPaymentPath] = useState(null);
   const { toasts, toast, removeToast } = useToast();
   const formRef = useRef(null);
+
+  const { markPaid } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const storedAfter = sessionStorage.getItem('afterPayment');
+    if (storedAfter) {
+      setAfterPaymentPath(storedAfter);
+      sessionStorage.removeItem('afterPayment');
+      return;
+    }
+
+    if (location.state?.from?.pathname) {
+      setAfterPaymentPath(location.state.from.pathname);
+    }
+  }, [location.state]);
 
   const handlePay = async (formData) => {
     const { isValid, errors } = validateCardForm(formData);
@@ -139,7 +161,8 @@ export default function PaymentPage() {
       });
 
       setIframeUrl(url);
-      toast.success('Redirecting to secure payment…');
+      setPaymentState('processing');
+      toast.success('Secure payment window opened. Complete checkout and confirm payment once finished.');
     } catch (err) {
       console.error('Paymob error:', err);
       toast.error(err?.message || 'Payment initiation failed. Please try again.');
@@ -152,6 +175,24 @@ export default function PaymentPage() {
   const handleOrderSummaryCTA = () => {
     if (formRef.current) {
       formRef.current.triggerSubmit();
+    }
+  };
+
+  const handleConfirmPayment = async () => {
+    setLoading(true);
+    try {
+      if (markPaid) await markPaid();
+      toast.success('Payment confirmed. Your student dashboard is now unlocked.');
+      setPaymentState('success');
+      if (afterPaymentPath) {
+        navigate(afterPaymentPath);
+        return;
+      }
+    } catch (err) {
+      console.error('Payment confirmation failed:', err);
+      toast.error(err?.message || 'Unable to confirm payment. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -216,6 +257,30 @@ export default function PaymentPage() {
                 transition={{ duration: 0.5, delay: 0.2 }}
               >
                 <OrderSummary onPay={handleOrderSummaryCTA} loading={loading} />
+                {paymentState === 'processing' && !iframeUrl && (
+                  <div style={{ marginTop: 24, padding: 18, borderRadius: 18, backgroundColor: '#0f172a', border: '1px solid rgba(148,163,184,0.18)' }}>
+                    <p style={{ color: '#cbd5e1', marginBottom: 12, lineHeight: 1.6 }}>
+                      Your secure checkout window is ready. After you finish the payment inside the Paymob iframe, click the button below to unlock your dashboard.
+                    </p>
+                    <button
+                      type="button"
+                      onClick={handleConfirmPayment}
+                      disabled={loading}
+                      style={{
+                        width: '100%',
+                        padding: '14px 18px',
+                        borderRadius: '14px',
+                        border: 'none',
+                        backgroundColor: '#0ea5e9',
+                        color: '#ffffff',
+                        fontWeight: 600,
+                        cursor: loading ? 'not-allowed' : 'pointer',
+                      }}
+                    >
+                      {loading ? 'Confirming…' : 'Confirm payment completed'}
+                    </button>
+                  </div>
+                )}
               </motion.div>
             </motion.main>
           )}
