@@ -55,6 +55,7 @@ import XPGrowth from "./components/Progress/XPGrowth.jsx";
 import CourseCompletion from "./components/Progress/CourseCompletion.jsx";
 import ProgressperCourse from "./components/Progress/ProgressperCourse";
 import DailyLearningHours from "./components/Progress/DailyLearningHours";
+import JobsPage from "./pages/Jobs/JobsPage.jsx";
 
 const Jobs = () => <h1>Jobs</h1>;
 
@@ -182,7 +183,7 @@ export default function App() {
         { path: "profile", element: <Profile /> },
         { path: "roadmap", element: <RoadmapPage /> },
         { path: "chatbot", element: <Chatbot /> },
-        { path: "jobs", element: <Jobs /> },
+        { path: "jobs", element: <JobsPage /> },
         { path: "progress", element: <ProgressPage /> },
         { path: "softSkills", element: <SoftSkills /> },
         { path: "ranking", element: <Ranking /> },
