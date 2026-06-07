@@ -3,6 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./styles/global.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
+/* Pages */
 import Home from "./pages/Home";
 import SoftSkills from "./pages/SoftSkills/SoftSkills";
 import Payment from "./pages/Payment";
@@ -12,7 +13,6 @@ import Dashboard from "./components/layout/Dashboard/Dashboard";
 import Career from "./components/layout/Career Twin/Career";
 import Register from "./components/layout/Register/Register";
 import RegisterJob from "./components/layout/Register/JobRegister";
-
 import CourseDetails from "./pages/CourseDetails/CourseDetails";
 import LiveSession from "./components/LiveSessions/LiveSession";
 import CommunityPage from "./pages/Community";
@@ -20,46 +20,41 @@ import Login from "./pages/Login/Login";
 import RoadmapPage from "./pages/Roadmap/RoadmapPage";
 import Chatbot from "./pages/Chatbot/Chatbot";
 
+/* Admin */
 import AdminLayout from "./components/Admin/AdminLayout";
 import AdminDashboard from "./components/Admin/AdminDashboard";
 import AdminUsers from "./components/Admin/AdminUsers";
 import AdminCourses from "./components/Admin/AdminCourses";
 import AdminLessons from "./components/Admin/AdminLessons";
 
+/* Instructor */
 import InstructorDashboardLayout from "./components/InstructorDashboard/InstructorDashboardLayout/InstructorDashboardLayout";
-
-
-import { supabase } from "./components/layout/services/supabaseClient";
-import api from "./components/layout/services/Api";
-
-import Projects from "./pages/Projects/Projects.jsx";
-import Jobs from "./pages/Jobs/JobsPage.jsx";
-
-
-
-
 import InstructorDashboardDashboard from "./components/InstructorDashboard/InstructorDashboardDashboard/InstructorDashboardDashboard";
 import InstructorDashboardCourses from "./components/InstructorDashboard/InstructorDashboardCourses/InstructorDashboardCourses";
 import InstructorDashboardInteractiveSessions from "./components/InstructorDashboard/InstructorDashboardInteractiveSessions/InstructorDashboardInteractiveSessions";
 import InstructorDashboardLessons from "./components/InstructorDashboard/InstructorDashboardLessons/InstructorDashboardLessons";
 import InstructorDashboardProfile from "./components/InstructorDashboard/InstructorDashboardProfile/InstructorDashboardProfile";
 
+/* Auth */
 import ProtectedRoute from "./components/common/ProtectedRoute";
 
+/* Services */
+import { supabase } from "./components/layout/services/supabaseClient";
+import api from "./components/layout/services/Api";
+
+/* Profile Components */
 import ProfileHeader from "./components/Profileheader/Profileheader.jsx";
 import PersonalInformation from "./components/PersonalInformation/PersonalInformation.jsx";
 import SocialLinks from "./components/SocialLinks/SocialLinks.jsx";
 import Documents from "./components/Documents/Documents.jsx";
 import Skills from "./components/Skills/Skills.jsx";
 
+/* Progress */
 import ProfileMetrics from "./components/Progress/ProfileMetrics.jsx";
 import XPGrowth from "./components/Progress/XPGrowth.jsx";
 import CourseCompletion from "./components/Progress/CourseCompletion.jsx";
 import ProgressperCourse from "./components/Progress/ProgressperCourse";
 import DailyLearningHours from "./components/Progress/DailyLearningHours";
-
-import { supabase } from "./components/layout/services/supabaseClient";
-import api from "./components/layout/services/Api";
 
 const Jobs = () => <h1>Jobs</h1>;
 
@@ -98,14 +93,6 @@ const ProgressPage = () => (
     </div>
   </div>
 );
-
-
-const Roadmap = () => <h1>Roadmap</h1>;
-const Chatbot = () => <h1>Chatbot</h1>;
-const Login = () => <h1>Login</h1>;
-
-
-const Landingpage = () => <h1>Landing Page</h1>
 
 export default function App() {
   const [theme, setTheme] = useState(() => localStorage.getItem("ct-theme") || "dark");
@@ -150,15 +137,12 @@ export default function App() {
   }, []);
 
   const Router = createBrowserRouter([
-    { path: "/", element: <Home theme={theme} toggleTheme={toggleTheme} /> },
+    { path: "/", element: <Home /> },
     { path: "/login", element: <Login /> },
-
     { path: "/register", element: <Register /> },
     { path: "/register-job", element: <RegisterJob /> },
-
-    
-    { path: "/course-details/:id", element: <CourseDetails /> },
-  
+    // { path: "/course-details/:id", element: <CourseDetails /> },
+    { path: "/course/:id", element: <CourseDetails /> },
 
     {
       path: "/payment",
@@ -186,8 +170,6 @@ export default function App() {
       ],
     },
 
-  
-
     {
       path: "/dashboard",
       element: (
@@ -212,46 +194,4 @@ export default function App() {
   ]);
 
   return <RouterProvider router={Router} />;
-
-
-
-{
-  path: "/payment",
-  element: (
-    <ProtectedRoute allowedRoles={['student']}>
-      <Payment />
-    </ProtectedRoute>
-  ),
-},
-
-
-
-{
-  path: "/instructor",
-  element: (
-    <ProtectedRoute allowedRoles={['instructor']}>
-      <InstructorDashboardLayout />
-    </ProtectedRoute>
-  ),
-  children: [
-    { path: "dashboard", element: <InstructorDashboardDashboard /> },
-    { path: "courses", element: <InstructorDashboardCourses /> },
-    { path: "lessons", element: <InstructorDashboardLessons /> },
-    { path: "interactive-sessions", element: <InstructorDashboardInteractiveSessions /> },
-    { path: "profile", element: <InstructorDashboardProfile /> }
-  ]
-},
-
-{
-  path: "/admin",
-  element: <AdminLayout />,
-  children: [
-    { index: true, element: <AdminDashboard /> },
-    { path: "users", element: <AdminUsers /> },
-    { path: "courses", element: <AdminCourses /> },
-    { path: "lessons", element: <AdminLessons /> }
-  ]
-}
-
-
 }
