@@ -3,19 +3,22 @@ import axios from 'axios';
 import styles from './Courses.module.css';
 import { useNavigate } from 'react-router-dom';
 
-
-
 export default function Courses() {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCourses = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`https://final-project-backend-production-214a.up.railway.app/api/courses`);
+
+        const response = await axios.get(
+          'https://final-project-backend-production-214a.up.railway.app/api/courses'
+        );
+
         const data = Array.isArray(response.data) ? response.data : [];
         setCourses(data.filter(c => c.title));
       } catch (err) {
@@ -25,6 +28,7 @@ export default function Courses() {
         setLoading(false);
       }
     };
+
     fetchCourses();
   }, []);
 
@@ -50,9 +54,14 @@ export default function Courses() {
       <section className={styles.courses} id="courses">
         <div className={styles.header}>
           <span className={styles.badgeSmall}>Our Courses</span>
-          <h2 className={styles.title}>Explore <span className={styles.gradient}>Top Courses</span></h2>
-          <p className={styles.subtitle}>Hand-picked courses taught by industry experts to get you job-ready fast.</p>
+          <h2 className={styles.title}>
+            Explore <span className={styles.gradient}>Top Courses</span>
+          </h2>
+          <p className={styles.subtitle}>
+            Hand-picked courses taught by industry experts to get you job-ready fast.
+          </p>
         </div>
+
         <div className={styles.grid}>
           {[...Array(6)].map((_, i) => (
             <div key={i} className={`${styles.card} ${styles.skeleton}`}>
@@ -75,8 +84,12 @@ export default function Courses() {
     <section className={styles.courses} id="courses">
       <div className={styles.header}>
         <span className={styles.badgeSmall}>Our Courses</span>
-        <h2 className={styles.title}>Explore <span className={styles.gradient}>Top Courses</span></h2>
-        <p className={styles.subtitle}>Hand-picked courses taught by industry experts to get you job-ready fast.</p>
+        <h2 className={styles.title}>
+          Explore <span className={styles.gradient}>Top Courses</span>
+        </h2>
+        <p className={styles.subtitle}>
+          Hand-picked courses taught by industry experts to get you job-ready fast.
+        </p>
       </div>
 
       <div className={styles.grid}>
@@ -84,29 +97,50 @@ export default function Courses() {
           <div
             key={course.id}
             className={styles.card}
-            onClick={() => navigate(`/course-details/${course.id}`)}
+            onClick={() => navigate(`/course/${course.id}`)}
             style={{ cursor: 'pointer' }}
           >
-              <div className={styles.cardImage}>
-              <img src={getThumbnail(course, index)} alt={course.title} loading="lazy" />
-              {course.course_type && <div className={styles.typeBadge}>{course.course_type}</div>}
-              {course.level && <div className={styles.levelBadge}>{course.level}</div>}
+            <div className={styles.cardImage}>
+              <img
+                src={getThumbnail(course, index)}
+                alt={course.title}
+                loading="lazy"
+              />
+
+              {course.course_type && (
+                <div className={styles.typeBadge}>{course.course_type}</div>
+              )}
+
+              {course.level && (
+                <div className={styles.levelBadge}>{course.level}</div>
+              )}
             </div>
 
             <div className={styles.cardContent}>
               <h3 className={styles.cardTitle}>{course.title}</h3>
+
               {course.description && (
                 <p className={styles.cardDescription}>{course.description}</p>
               )}
 
               <div className={styles.meta}>
-                {course.instructor && <span className={styles.instructor}>👤 {course.instructor}</span>}
-                {course.duration && <span className={styles.duration}>⏱ {course.duration}</span>}
-                {course.language && <span className={styles.language}>🌐 {course.language}</span>}
+                {course.instructor && (
+                  <span className={styles.instructor}>👤 {course.instructor}</span>
+                )}
+
+                {course.duration && (
+                  <span className={styles.duration}>⏱ {course.duration}</span>
+                )}
+
+                {course.language && (
+                  <span className={styles.language}>🌐 {course.language}</span>
+                )}
               </div>
 
               {course.lessons_count > 0 && (
-                <div className={styles.lessons}>📚 {course.lessons_count} Lessons</div>
+                <div className={styles.lessons}>
+                  📚 {course.lessons_count} Lessons
+                </div>
               )}
 
               <div className={styles.cardFooter}>
@@ -118,26 +152,30 @@ export default function Courses() {
                     </>
                   )}
                 </div>
+
                 <div className={styles.price}>{formatPrice(course.price)}</div>
               </div>
 
-                <button
-                  className={styles.enrollBtn}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    // remember to go to dashboard after payment when user enrolled from home
-                    try { sessionStorage.setItem('afterPayment', '/dashboard/dashboard'); } catch {}
-                    navigate('/payment', {
-                      state: {
-                        courseId: course.id,
-                        courseTitle: course.title,
-                        price: course.price,
-                      },
-                    });
-                  }}
-                >
-                  Enroll Now →
-                </button>
+              <button
+                className={styles.enrollBtn}
+                onClick={(e) => {
+                  e.stopPropagation();
+
+                  try {
+                    sessionStorage.setItem('afterPayment', '/dashboard/dashboard');
+                  } catch {}
+
+                  navigate('/payment', {
+                    state: {
+                      courseId: course.id,
+                      courseTitle: course.title,
+                      price: course.price,
+                    },
+                  });
+                }}
+              >
+                Enroll Now →
+              </button>
             </div>
           </div>
         ))}
