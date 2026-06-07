@@ -19,15 +19,18 @@ gap: 20px;
 }
 
 .profileBanner {
-background-color: #0f1422;
-border-radius: 20px;
-padding: 24px 30px;
-display: flex;
-justify-content: space-between;
-align-items: center;
-position: relative;
-overflow: hidden;
-border: 1px solid rgba(255, 255, 255, 0.03);
+  background-color: #0f1422;
+  border-radius: 20px;
+  padding: 24px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  min-height: 120px; 
+  height: auto; 
 }
 
 .profileBanner::before {
@@ -48,11 +51,11 @@ pointer-events: none;
 }
 
 .profileLeft {
-display: flex;
-align-items: center;
-gap: 20px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex: 1; 
 }
-
 .avatarWrapper {
 position: relative;
 width: 56px;
@@ -85,26 +88,32 @@ margin: 0 0 6px 0;
 }
 
 .profileInfo p {
-color: #8a94a6;
-font-size: 13px;
-margin: 0;
-max-width: 480px;
-line-height: 1.5;
+  color: #8a94a6;
+  font-size: 13px;
+  margin: 0;
+  max-width: 480px;
+  line-height: 1.5;
+  white-space: normal; 
+  word-wrap: break-word;
 }
 
 .salaryAmount {
-display: block;
-font-size: 26px;
-font-weight: 700;
-color: #00e5ff;
-text-align: right;
+  display: block;
+  font-size: 32px;
+  font-weight: 700;
+  color: #00e5ff;
+  text-align: right;
+  line-height: 1.1;
+  white-space: nowrap; 
 }
 
 .salarySubText {
-font-size: 11px;
-color: #10b981;
-margin-top: 4px;
-display: block;
+  font-size: 11px;
+  color: #10b981;
+  margin-top: 6px;
+  display: block;
+  text-align: right;
+  white-space: nowrap;
 }
 
 .journeySection {

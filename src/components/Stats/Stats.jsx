@@ -1,8 +1,10 @@
+// ✅ CONNECTED TO API — fetches platform stats directly via axios → GET /api/stats/platform
+// ⚠️  FALLS BACK TO STATIC FALLBACK_STATS constant when API is unavailable
 import { useEffect, useRef, useState } from 'react';
 import styles from './Stats.module.css';
 import axios from 'axios';
 
-const BASE_URL = 'https://final-project-backend-production-5fe7.up.railway.app/api';
+const BASE_URL = 'https://final-project-backend-production-214a.up.railway.app';
 
 const FALLBACK_STATS = [
   { value: 50000, suffix: '+', label: 'Active Students' },

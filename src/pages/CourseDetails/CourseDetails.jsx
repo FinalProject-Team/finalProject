@@ -29,29 +29,29 @@ export default function CourseDetails() {
 
         try {
           const token = localStorage.getItem("token");
-              console.log("TOKEN =", token);
+
           const lessonsRes = await axios.get(
             `https://final-project-backend-production-214a.up.railway.app/api/courses/${id}/lessons`,
             {
               headers: {
-                Authorization: `Bearer ${token}`,
+                Authorization: token?.startsWith("Bearer ")
+                  ? token
+                  : `Bearer ${token}`,
               },
             }
           );
 
           lessonsData = lessonsRes.data || [];
         } catch (lessonError) {
-         console.log("Lessons not available yet");
-
-lessonsData = [
-  {
-    id: "preview",
-    title: "Free Preview",
-    video_url: courseRes.data.video_preview,
-    lesson_order: 1,
-    duration: "Preview",
-  },
-];
+          lessonsData = [
+            {
+              id: "preview",
+              title: "Free Preview",
+              video_url: courseRes.data.video_preview,
+              lesson_order: 1,
+              duration: "Preview",
+            },
+          ];
         }
 
         setCourse({

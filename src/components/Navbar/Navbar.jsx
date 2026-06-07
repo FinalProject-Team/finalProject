@@ -1,19 +1,27 @@
 import { Menu, X, Sun, Moon } from 'lucide-react';
 import { useState } from 'react';
-import { Link } from 'react-router-dom'; // 👈 ضفنا الـ Link هنا عشان التنقل
+import { Link, useNavigate } from 'react-router-dom';
 import styles from './Navbar.module.css';
+import { useAuth } from '../../context/AuthContext';
 
 export default function Navbar({ theme, toggleTheme }) {
   const [isOpen, setIsOpen] = useState(false);
+  const { isAuthenticated, role, signOut, getDashboardPath } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate('/');
+  };
 
   return (
     <nav className={styles.navbar}>
       <div className={styles.navContainer}>
         <div className={styles.logoSection}>
-          <div className={styles.logo}>
+          <Link to="/" className={styles.logo} style={{ textDecoration: 'none' }}>
             <div className={styles.logoIcon}>✦</div>
             <span>CareerTech</span>
-          </div>
+          </Link>
         </div>
 
         <button
@@ -25,11 +33,11 @@ export default function Navbar({ theme, toggleTheme }) {
         </button>
 
         <div className={`${styles.navLinks} ${isOpen ? styles.active : ''}`}>
-          <a href="#home" onClick={() => setIsOpen(false)}>Home</a>
-          <a href="#tracks" onClick={() => setIsOpen(false)}>Tracks</a>
+          <a href="#home"    onClick={() => setIsOpen(false)}>Home</a>
+          <a href="#tracks"  onClick={() => setIsOpen(false)}>Tracks</a>
           <a href="#courses" onClick={() => setIsOpen(false)}>Courses</a>
-          <a href="#about" onClick={() => setIsOpen(false)}>About</a>
-          <a href="#jobs" onClick={() => setIsOpen(false)}>Apply Job</a>
+          <a href="#about"   onClick={() => setIsOpen(false)}>About</a>
+          <a href="#jobs"    onClick={() => setIsOpen(false)}>Apply Job</a>
         </div>
 
         <div className={styles.authButtons}>
@@ -37,16 +45,25 @@ export default function Navbar({ theme, toggleTheme }) {
             className={styles.themeToggle}
             onClick={toggleTheme}
             aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-            title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
           >
             {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
           </button>
-          <button className={styles.loginBtn}>Login</button>
-          
-          {/* 👈 هنا حولنا الزرار لـ Link واديناه نفس الـ class بتاعها بالظبط عشان الديزاين ما يتأثرش نهائي */}
-          <Link to="/register" className={styles.signupBtn}>
-            Sign Up
-          </Link>
+
+          {isAuthenticated ? (
+            <>
+              <Link to={getDashboardPath()} className={styles.loginBtn}>
+                Dashboard
+              </Link>
+              <button className={styles.signupBtn} onClick={handleSignOut}>
+                Sign Out
+              </button>
+            </>
+          ) : (
+            <>
+              <Link to="/login"    className={styles.loginBtn}>Login</Link>
+              <Link to="/register" className={styles.signupBtn}>Sign Up</Link>
+            </>
+          )}
         </div>
       </div>
     </nav>

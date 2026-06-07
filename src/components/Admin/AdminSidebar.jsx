@@ -20,14 +20,16 @@ export default function AdminSidebar() {
         </div>
 
         <nav className="d-flex flex-column gap-1">
+          {/* 1️⃣ التعديل هنا: أضفنا /admin/ قبل admindashboard وظبطنا الـ active */}
           <Link 
-            to="/admin" 
-            className={`${styles.navLink} ${location.pathname === '/admin' ? styles.activeLink : ''}`}
+            to="/admin/admindashboard" 
+            className={`${styles.navLink} ${location.pathname === '/admin/admindashboard' ? styles.activeLink : ''}`}
           >
             <LayoutDashboard size={20} />
             <span>Dashboard</span>
           </Link>
 
+          {/* 2️⃣ هنا المسار /admin/users سليم، بس اتأكدي إن الـ active شغال تمام */}
           <Link 
             to="/admin/users" 
             className={`${styles.navLink} ${location.pathname === '/admin/users' ? styles.activeLink : ''}`}
