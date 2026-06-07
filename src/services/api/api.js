@@ -13,16 +13,15 @@ function authHeaders() {
 // ─── AUTH ─────────────────────────────────────────────────────────────────────
 
 export async function apiLogin(email, password) {
-  const res = await axios.post(
-    `${BASE_URL}/api/auth/login`,
-    { email, password }
-  );
+
+  const res = await axios.post(`${BASE_URL}/api/auth/login`, { email, password });
+  if (res.data?.token) localStorage.setItem('token', res.data.token);
+
 
   console.log('LOGIN RESPONSE:', res.data);
 
-  if (res.data?.token) {
-    localStorage.setItem('token', res.data.token);
-  }
+  
+
 
   return res.data;
 }

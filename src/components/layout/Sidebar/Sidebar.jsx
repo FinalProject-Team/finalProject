@@ -7,7 +7,9 @@ import { FaUser, FaRobot, FaChartBar, FaFolderOpen } from 'react-icons/fa';
 import { BsBriefcaseFill } from 'react-icons/bs';
 import { LogOut } from 'lucide-react';
 import logo from '../../../assets/images/logo.png';
+
 import { useAuth } from '../../../context/AuthContext';
+
 
 const STUDENT_LINKS = [
   { to: '/dashboard/dashboard',    icon: <MdDashboard />,       label: 'Dashboard' },
@@ -36,15 +38,19 @@ const JOB_SEEKER_LINKS = [
 ];
 
 export default function Sidebar() {
+
   const { role, signOut } = useAuth();
+
   const navigate = useNavigate();
 
   const links = role === 'job_seeker' ? JOB_SEEKER_LINKS : STUDENT_LINKS;
+
 
   const handleSignOut = async () => {
     await signOut();
     navigate('/');
   };
+
 
   return (
     <div className={styles.sidebar}>

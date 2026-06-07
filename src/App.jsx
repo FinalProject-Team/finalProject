@@ -20,6 +20,12 @@ import Login from './pages/Login/Login';
 import RoadmapPage from './pages/Roadmap/RoadmapPage';
 import Chatbot from './pages/Chatbot/Chatbot';
 
+import { supabase } from "./components/layout/services/supabaseClient";
+import api from "./components/layout/services/Api";
+
+import Projects from "./pages/Projects/Projects.jsx";
+import Jobs from "./pages/Jobs/JobsPage.jsx";
+
 /* Admin */
 import AdminLayout from './components/Admin/AdminLayout';
 import AdminDashboard from './components/Admin/AdminDashboard';
@@ -92,6 +98,14 @@ const ProgressPage = () => (
   </div>
 );
 
+
+const Roadmap = () => <h1>Roadmap</h1>;
+const Chatbot = () => <h1>Chatbot</h1>;
+const Login = () => <h1>Login</h1>;
+
+
+const Landingpage = () => <h1>Landing Page</h1>
+
 export default function App() {
   const [theme, setTheme] = useState(() => localStorage.getItem('ct-theme') || 'dark');
 
@@ -134,17 +148,48 @@ export default function App() {
   const Router = createBrowserRouter([
     { path: "/", element: <Home /> },
     { path: "/login", element: <Login /> },
-    { path: "/register", element: <Register /> },
-    { path: "/course-details", element: <CourseDetails /> },
-    { path: "/register-job", element: <RegisterJob /> },
-    {
-      path: "/payment",
-      element: (
-        <ProtectedRoute allowedRoles={['student']}>
-          <Payment />
-        </ProtectedRoute>
-      ),
-    },
+{ path: "/register", element: <Register /> },
+{ path: "/course-details", element: <CourseDetails /> },
+{ path: "/register-job", element: <RegisterJob /> },
+
+{
+  path: "/payment",
+  element: (
+    <ProtectedRoute allowedRoles={['student']}>
+      <Payment />
+    </ProtectedRoute>
+  ),
+},
+
+{
+  path: "/instructor",
+  element: <InstructorDashboardLayout />,
+  children: [
+    { path: "dashboard", element: <InstructorDashboardDashboard /> },
+    { path: "courses", element: <InstructorDashboardCourses /> },
+    { path: "lessons", element: <InstructorDashboardLessons /> },
+    { path: "interactive-sessions", element: <InstructorDashboardInteractiveSessions /> },
+    { path: "profile", element: <InstructorDashboardProfile /> }
+  ]
+},
+
+{
+  path: "/dashboard",
+  element: <Layout />,
+  children: [
+    { path: "dashboard", element: <Dashboard /> },
+    { path: "profile", element: <Profile /> },
+    { path: "roadmap", element: <Roadmap /> },
+    { path: "chatbot", element: <Chatbot /> },
+    { path: "projects", element: <Projects /> },
+    { path: "jobs", element: <Jobs /> },
+    { path: "progress", element: <ProgressPage /> },
+    { path: "softSkills", element: <SoftSkills /> },
+    { path: "ranking", element: <Ranking /> },
+    { path: "careertwin", element: <Career /> },
+    { path: "live-session", element: <LiveSession /> }
+  ]
+}
 {
   path: "/instructor",
   element: (
