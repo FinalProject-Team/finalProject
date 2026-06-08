@@ -1,15 +1,25 @@
+import { useNavigate } from "react-router-dom";
 import styles from "./PriceCard.module.css";
 
 export default function PriceCard({ course }) {
+  const navigate = useNavigate();
+
   const price = course?.price ?? 0;
   const level = course?.level ?? "All levels";
   const duration = course?.duration ?? "N/A";
 
-  const lessonsCount =
-    course?.lessons?.length || course?.lessons_count || 0;
+  const lessonsCount = course?.lessons?.length || course?.lessons_count || 0;
+  const studentsCount = course?.students_count || course?.students || 0;
 
-  const studentsCount =
-    course?.students_count || course?.students || 0;
+  const handleEnroll = () => {
+    navigate("/payment", {
+      state: {
+        courseId: course.id,
+        courseTitle: course.title,
+        price: course.price,
+      },
+    });
+  };
 
   return (
     <div className={styles.card}>
@@ -19,30 +29,17 @@ export default function PriceCard({ course }) {
 
       <span className={styles.level}>{level}</span>
 
-      <button className={styles.button}>Enroll Now</button>
+      <button className={styles.button} onClick={handleEnroll}>
+        Enroll Now
+      </button>
 
       <p className={styles.guarantee}>Full lifetime access</p>
 
       <ul className={styles.features}>
-        <li>
-          <span>✔</span>
-          {duration}
-        </li>
-
-        <li>
-          <span>✔</span>
-          {lessonsCount} lessons
-        </li>
-
-        <li>
-          <span>✔</span>
-          {studentsCount}+ students
-        </li>
-
-        <li>
-          <span>✔</span>
-          Certificate included
-        </li>
+        <li><span>✔</span>{duration}</li>
+        <li><span>✔</span>{lessonsCount} lessons</li>
+        <li><span>✔</span>{studentsCount}+ students</li>
+        <li><span>✔</span>Certificate included</li>
       </ul>
     </div>
   );
