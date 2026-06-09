@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from './Navbar.module.css';
 import { useAuth } from '../../context/AuthContext';
+import JobRegister from '../layout/Register/JobRegister'
 
 export default function Navbar({ theme, toggleTheme }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -37,7 +38,7 @@ export default function Navbar({ theme, toggleTheme }) {
           <a href="#tracks"  onClick={() => setIsOpen(false)}>Tracks</a>
           <a href="#courses" onClick={() => setIsOpen(false)}>Courses</a>
           <a href="#about"   onClick={() => setIsOpen(false)}>About</a>
-          <a href="#jobs"    onClick={() => setIsOpen(false)}>Apply Job</a>
+          <Link to="/register-job">Apply Now</Link>
         </div>
 
         <div className={styles.authButtons}>
