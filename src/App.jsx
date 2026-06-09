@@ -138,8 +138,9 @@ export default function App() {
     getSessionAndSendToBackend();
   }, []);
 
+  // 📝 مصفوفة الراوتر كاملة ومجمعة بدون تكرار أو قطع في الأقواس
   const Router = createBrowserRouter([
-    { path: "/", element: <Home /> },
+    { path: "/", element: <Home theme={theme} toggleTheme={toggleTheme} /> },
     { path: "/login", element: <Login /> },
     { path: "/register", element: <Register /> },
     { path: "/register-job", element: <RegisterJob /> },

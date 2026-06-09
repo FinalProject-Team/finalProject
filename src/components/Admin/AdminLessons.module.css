@@ -1,41 +1,70 @@
+/* الحاوية الأساسية للصفحة */
 .lessonsContainer {
-  padding: 32px;
-  margin-top: 80px;
+  padding: 1.5rem;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+  font-family: system-ui, -apple-system, sans-serif;
 }
 
+/* تنسيق العناوين الرئيسية */
 .title {
   color: #1e293b;
   font-weight: 700;
-  margin-bottom: 4px;
+  margin-bottom: 0.25rem;
 }
 
 .subtitle {
   color: #64748b;
-  font-size: 0.875rem;
+  font-size: 0.9rem;
 }
 
+/* زر إضافة درس جديد */
+.addLessonBtn {
+  background-color: #00cae3;
+  color: #ffffff;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.addLessonBtn:hover {
+  background-color: #00b5cc;
+  transform: translateY(-1px);
+}
+
+/* 🃏 الكارد الأبيض الرئيسي للجدول */
 .tableCard {
-  background-color: #ffffff;
-  border: 1px solid #f1f5f9;
+  background: #ffffff;
   border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  padding: 1.5rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
+  border: 1px solid #edf2f7;
+  margin-top: 1.5rem;
 }
 
+/* صف البحث والفلترة */
 .searchRow {
   display: flex;
-  gap: 16px;
-  margin-bottom: 24px;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
 }
 
 .searchWrapper {
   position: relative;
   flex: 1;
+  min-width: 250px;
 }
 
 .searchIcon {
   position: absolute;
-  left: 16px;
+  left: 1rem;
   top: 50%;
   transform: translateY(-50%);
   color: #94a3b8;
@@ -43,42 +72,238 @@
 
 .searchInput {
   width: 100%;
-  padding: 10px 16px 10px 44px;
-  background-color: #f8fafc;
+  padding: 0.6rem 1rem 0.6rem 2.5rem;
   border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  font-size: 0.875rem;
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: #334155;
+  font-size: 0.95rem;
   outline: none;
-  transition: border-color 0.2s ease;
+  transition: border-color 0.2s;
 }
 
 .searchInput:focus {
-  border-color: #0284c7;
+  border-color: #00cae3;
 }
 
 .courseSelect {
-  width: 180px;
-  padding: 10px 16px;
-  background-color: #ffffff;
+  padding: 0.6rem 2rem 0.6rem 1rem;
   border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  font-size: 0.875rem;
-  color: #1e293b;
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: #334155;
+  font-size: 0.95rem;
   outline: none;
   cursor: pointer;
 }
 
+/* 📊 تنسيق الجدول مريح للعين ومطابق للكورسات */
 .customTable {
   width: 100%;
   border-collapse: collapse;
 }
 
 .customTable th {
+  background-color: #ffffff;
   color: #475569;
   font-weight: 600;
-  font-size: 0.875rem;
-  padding: 12px 16px;
+  padding: 1rem;
   text-align: left;
+  font-size: 0.9rem;
+  border-bottom: 2px solid #edf2f7;
+}
+
+.tableRow {
   border-bottom: 1px solid #f1f5f9;
-  background-color: #ffffff;
+  transition: background-color 0.2s;
+}
+
+.tableRow:hover {
+  background-color: #f8fafc;
+}
+
+.lessonTitleText {
+  color: #0f172a;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.courseTitleText {
+  color: #64748b;
+  font-size: 0.95rem;
+}
+
+.durationText {
+  color: #64748b;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.noData {
+  text-align: center;
+  padding: 3rem !important;
+  color: #94a3b8;
+  font-size: 1rem;
+}
+
+/* 📥 الهيكل الموحد والأساسي لكل المودالات (Overlay) */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 23, 42, 0.6); /* تغطية داكنة خفيفة خلف المودال */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+  backdrop-filter: blur(4px);
+  padding: 1rem;
+}
+
+/* 1️⃣ مودال الإضافة والتعديل ومودال الخطأ (Dark Content) */
+.modalContent, .modalContentError {
+  background: #1e293b; /* اللون الكحلي الداكن الأصلي */
+  border-radius: 14px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+  border: 1px solid #334155;
+  overflow: hidden;
+  animation: modalScaleIn 0.2s ease-out;
+}
+
+/* 2️⃣ مودال تأكيد الحذف (Dark Delete Content) */
+.modalContentDelete {
+  background: #1e293b; /* كحلي داكن متناسق لمنع الخلفية البيضاء المكسورة */
+  border-radius: 14px;
+  width: 100%;
+  max-width: 440px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
+  border: 1px solid #334155;
+  overflow: hidden;
+  animation: modalScaleIn 0.2s ease-out;
+}
+
+/* 📌 الهيدرز الخاصة بالمودالات (Headers) */
+.modalHeader, .modalHeaderDelete, .modalHeaderError {
+  padding: 1.2rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #334155; /* خط فاصل داكن ناعم */
+}
+
+/* خلفية الهيدر الموحدة */
+.modalHeader, .modalHeaderDelete, .modalHeaderError {
+  background: #1e293b; 
+}
+
+/* عناوين المودالات الملونة */
+.modalTitle { color: #00cae3; font-weight: 600; margin: 0; font-size: 1.1rem; } /* اللبني الزاهي للتعديل والإضافة */
+.modalTitleDelete { color: #ef4444; font-weight: 600; margin: 0; font-size: 1.1rem; } /* الأحمر للحذف */
+.modalTitleError { color: #f59e0b; font-weight: 600; margin: 0; font-size: 1.1rem; } /* البرتقالي للخطأ */
+
+/* أزرار الإغلاق العليا (X) */
+.closeBtn, .closeBtnError {
+  background: none;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  transition: color 0.2s;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+.closeBtn:hover, .closeBtnError:hover { color: #94a3b8; }
+
+/* جسم المودال الداخلي (Body) */
+.modalBody {
+  padding: 1.5rem;
+  background: #1e293b;
+}
+
+/* تنسيق عناصر الإدخال (Inputs & Labels) */
+.formGroup {
+  margin-bottom: 1.2rem;
+}
+
+.formLabel {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #94a3b8; /* رمادي فاتح مقروء في الوضع الداكن */
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.formInput, .formSelect {
+  width: 100%;
+  padding: 0.65rem 0.8rem;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  background-color: #0f172a; /* خلفية الـ Inputs داكنة جداً وعميقة */
+  color: #f1f5f9;
+  outline: none;
+  font-size: 0.95rem;
+}
+
+.formInput:focus, .formSelect:focus {
+  border-color: #00cae3;
+}
+
+/* نص التنبيه جوه المودال */
+.errorTextContent {
+  color: #cbd5e1;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* 👣 الفوتر المخصص للأزرار بالخلفية الأغمق (Footer) */
+.modalFooter, .modalFooterError {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid #334155;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  background: #0f172a; /* فوتر داكن ومميز تحت الأزرار */
+}
+
+/* تنسيق الأزرار الاحترافي بدون البوردر الأسود الديفولت */
+.cancelBtn, .saveBtn, .confirmDeleteBtn, .errorCloseBtn {
+  border: none !important; /* إلغاء البوردر الحاد تماماً */
+  padding: 0.55rem 1.4rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+/* زر الإلغاء */
+.cancelBtn {
+  background: #334155;
+  color: #94a3b8;
+}
+.cancelBtn:hover { background: #475569; color: #cbd5e1; }
+
+/* زر الحفظ والتعديل اللبني */
+.saveBtn {
+  background: #00cae3;
+  color: #ffffff;
+}
+.saveBtn:hover { background: #00b5cc; }
+
+/* زر تأكيد الحذف الأحمر المودرن */
+.confirmDeleteBtn, .errorCloseBtn {
+  background: #ef4444;
+  color: #ffffff;
+}
+.confirmDeleteBtn:hover, .errorCloseBtn:hover { background: #dc2626; }
+
+/* أنيميشن ناعم لظهور المودال */
+@keyframes modalScaleIn {
+  from { transform: scale(0.96); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
 }
