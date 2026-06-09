@@ -5,6 +5,7 @@
     align-items: center;
     background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); 
     padding: 20px;
+    box-sizing: border-box; /* حماية الأبعاد من التمدد خارج الشاشة */
 }
 
 .card {
@@ -16,6 +17,7 @@
     max-width: 450px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
     position: relative;
+    box-sizing: border-box;
 }
 
 .headerArea {
@@ -23,7 +25,7 @@
     flex-direction: column;
     align-items: center;
     gap: 8px;
-    margin-bottom: 10px;
+    margin-bottom: 20px; /* زودنا المسافة شوية عشان نمنع خنق العناوين */
 }
 
 .jobLogo {
@@ -59,22 +61,30 @@
 .form {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 20px; /* مسافة أوسع ومريحة بين الحقول */
+    width: 100%;
 }
 
+/* 🔥 الحل السحري هنا: الـ Input Group لازم يضمن إنه مغطي العرض كامل ويكون Relative */
 .inputGroup {
     position: relative;
     display: flex;
     align-items: center;
+    width: 100%;
+    box-sizing: border-box;
 }
 
+/* ظبط مكان الأيقونة الشمال عشان ما تدخلش في الكلام */
 .iconLeft {
     position: absolute;
     left: 14px;
     color: #64748b;
     font-size: 16px;
+    z-index: 2; /* نضمن إنها دايماً فوق الـ background ومش مستخبية */
+    pointer-events: none; /* عشان لو ضغطت عليها الماوس يربط بالـ input نفسه */
 }
 
+/* ظبط مكان أيقونة العين اليمين (إظهار الباسورد) */
 .iconRight {
     position: absolute;
     right: 14px;
@@ -82,23 +92,27 @@
     cursor: pointer;
     display: flex;
     align-items: center;
+    z-index: 2;
 }
 
 .iconRight:hover {
     color: #38bdf8;
 }
 
+/* 🔥 حلينا مشكلة الـ Padding الداخلي عشان النص يبدأ بعد الأيقونة تماماً */
 .input {
     width: 100%;
-    padding: 12px 14px 12px 42px;
+    padding: 14px 16px 14px 45px; /* 45px حشوة يسار عشان تدي مساحة مريحة جداً بعد الأيقونة */
     background: #0f172a;
     border: 1px solid #334155;
     border-radius: 8px;
     color: #f8fafc;
     font-size: 14px;
     transition: all 0.3s ease;
+    box-sizing: border-box; /* يمنع الـ input إنه يخرج برة الـ card */
 }
 
+/* حقول الباسورد محتاجة حشوة يمين كمان عشان النص ما يدخلش في أيقونة العين */
 .inputPassword {
     padding-right: 42px;
 }
@@ -120,7 +134,7 @@
     background: #38bdf8;
     color: #0f172a;
     border: none;
-    padding: 12px;
+    padding: 14px;
     border-radius: 8px;
     font-size: 15px;
     font-weight: 600;
@@ -131,6 +145,8 @@
     gap: 8px;
     transition: background 0.2s ease;
     margin-top: 10px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .btn:hover {
@@ -147,6 +163,7 @@
     text-align: center;
     margin: 24px 0;
     color: #475569;
+    width: 100%;
 }
 
 .divider::before, .divider::after {
@@ -163,7 +180,7 @@
 
 .googleBtn {
     width: 100%;
-    padding: 11px;
+    padding: 12px;
     background: transparent;
     border: 1px solid #334155;
     border-radius: 8px;
@@ -176,6 +193,7 @@
     justify-content: center;
     gap: 10px;
     transition: background 0.2s ease;
+    box-sizing: border-box;
 }
 
 .googleBtn:hover {
@@ -205,6 +223,7 @@
     text-decoration: underline;
 }
 
+/* Toasts */
 .toast {
     width: 100%;
     padding: 12px 16px;
@@ -214,6 +233,7 @@
     margin-bottom: 20px;
     text-align: left;
     animation: slideIn 0.3s ease-out;
+    box-sizing: border-box;
 }
 
 .toastSuccess {

@@ -8,10 +8,10 @@ import * as yup from 'yup';
 
 const schema = yup.object().shape({
   fullName: yup.string().required("Full name is required").min(3),
-  email: yup.string().required().email(),
-  phone: yup.string().required().matches(/^01[0125][0-9]{8}$/),
-  password: yup.string().required().min(6),
-  confirmPassword: yup.string().oneOf([yup.ref('password'), null], "Passwords do not match"),
+  email: yup.string().required("Email is required").email("Invalid email format"),
+  phone: yup.string().required("Phone number is required").matches(/^01[0125][0-9]{8}$/, "Invalid Egyptian phone number"),
+  password: yup.string().required("Password is required").min(6, "Password must be at least 6 characters"),
+  confirmPassword: yup.string().oneOf([yup.ref('password'), null], "Passwords do not match").required("Please confirm your password"),
 });
 
 export default function Register() {
@@ -27,14 +27,11 @@ export default function Register() {
   });
 
   const [errors, setErrors] = useState({});
-
-  // toast state (مرة واحدة فقط)
   const [toastMessage, setToastMessage] = useState("");
   const [toastType, setToastType] = useState("");
 
   const navigate = useNavigate();
 
-  // hide toast after 4s
   useEffect(() => {
     if (toastMessage) {
       const timer = setTimeout(() => {
@@ -95,10 +92,7 @@ export default function Register() {
         setErrors(validationErrors);
       } else {
         setToastType("error");
-
-        const serverMessage =
-          err.response?.data?.message || err.message || "";
-
+        const serverMessage = err.response?.data?.message || err.message || "";
         const statusCode = err.response?.status;
 
         if (
@@ -125,25 +119,48 @@ export default function Register() {
           </div>
         )}
 
-        <h1 className={styles.title}>CareerTech</h1>
-        <p className={styles.subtitle}>Create your account</p>
+        <div className={styles.headerArea}>
+          <h1 className={styles.title}>CareerTech</h1>
+          <p className={styles.subtitle}>Create your account</p>
+        </div>
 
         <form className={styles.form} onSubmit={handleSubmit}>
 
           <div className={styles.inputGroup}>
             <FaUser className={styles.iconLeft} />
-            <input name="fullName" placeholder="Full Name" value={formData.fullName} onChange={handleChange} />
+            <input 
+              name="fullName" 
+              placeholder="Full Name" 
+              value={formData.fullName} 
+              onChange={handleChange} 
+              className={styles.input}
+            />
           </div>
+          {errors.fullName && <span className={styles.errorText}>{errors.fullName}</span>}
 
           <div className={styles.inputGroup}>
             <FaEnvelope className={styles.iconLeft} />
-            <input name="email" placeholder="Email" value={formData.email} onChange={handleChange} />
+            <input 
+              name="email" 
+              placeholder="Email" 
+              value={formData.email} 
+              onChange={handleChange} 
+              className={styles.input}
+            />
           </div>
+          {errors.email && <span className={styles.errorText}>{errors.email}</span>}
 
           <div className={styles.inputGroup}>
             <FaPhoneAlt className={styles.iconLeft} />
-            <input name="phone" placeholder="Phone" value={formData.phone} onChange={handleChange} />
+            <input 
+              name="phone" 
+              placeholder="Phone" 
+              value={formData.phone} 
+              onChange={handleChange} 
+              className={styles.input}
+            />
           </div>
+          {errors.phone && <span className={styles.errorText}>{errors.phone}</span>}
 
           <div className={styles.inputGroup}>
             <FaLock className={styles.iconLeft} />
@@ -153,11 +170,13 @@ export default function Register() {
               placeholder="Password"
               value={formData.password}
               onChange={handleChange}
+              className={`${styles.input} ${styles.inputPassword}`}
             />
-            <span onClick={() => setShowPassword(!showPassword)}>
+            <span className={styles.iconRight} onClick={() => setShowPassword(!showPassword)}>
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </span>
           </div>
+          {errors.password && <span className={styles.errorText}>{errors.password}</span>}
 
           <div className={styles.inputGroup}>
             <FaLock className={styles.iconLeft} />
@@ -167,26 +186,30 @@ export default function Register() {
               placeholder="Confirm Password"
               value={formData.confirmPassword}
               onChange={handleChange}
+              className={`${styles.input} ${styles.inputPassword}`}
             />
-            <span onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
+            <span className={styles.iconRight} onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
               {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
             </span>
           </div>
+          {errors.confirmPassword && <span className={styles.errorText}>{errors.confirmPassword}</span>}
 
           <button type="submit" className={styles.btn}>
-            <FaUserPlus /> Sign Up
+            <FaUserPlus className={styles.btnIcon} /> Sign Up
           </button>
 
         </form>
 
-        <div className={styles.divider}>OR</div>
+        <div className={styles.divider}>
+          <span>OR</span>
+        </div>
 
         <button onClick={handleGoogleLogin} className={styles.googleBtn}>
-          <FcGoogle /> Continue with Google
+          <FcGoogle className={styles.googleIcon} /> Continue with Google
         </button>
 
         <p className={styles.footerText}>
-          Already have an account? <Link to="/login">Login</Link>
+          Already have an account? <Link to="/login" className={styles.employerLink}>Login</Link>
         </p>
 
       </div>
