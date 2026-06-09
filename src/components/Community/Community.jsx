@@ -1,3 +1,4 @@
+import { PostsProvider } from '../../context/PostsContext';
 import styles from './Community.module.css';
 import Feed from './Feed/Feed';
 import RightSidebar from './RightSidebar/RightSidebar';
@@ -8,7 +9,9 @@ export default function Community() {
       <div className={styles.layout}>
         {/* Center feed — only this scrolls */}
         <div className={styles.feedCol}>
-          <Feed />
+          <PostsProvider>
+            <Feed />
+          </PostsProvider>
         </div>
         {/* Right sidebar — sticky widgets */}
         <RightSidebar />

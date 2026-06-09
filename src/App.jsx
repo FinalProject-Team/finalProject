@@ -3,6 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./styles/global.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
+/* Pages */
 import Home from "./pages/Home";
 import SoftSkills from "./pages/SoftSkills/SoftSkills";
 import Payment from "./pages/Payment";
@@ -19,12 +20,14 @@ import Login from "./pages/Login/Login";
 import RoadmapPage from "./pages/Roadmap/RoadmapPage";
 import Chatbot from "./pages/Chatbot/Chatbot";
 
+/* Admin */
 import AdminLayout from "./components/Admin/AdminLayout";
 import AdminDashboard from "./components/Admin/AdminDashboard";
 import AdminUsers from "./components/Admin/AdminUsers";
 import AdminCourses from "./components/Admin/AdminCourses";
 import AdminLessons from "./components/Admin/AdminLessons";
 
+/* Instructor */
 import InstructorDashboardLayout from "./components/InstructorDashboard/InstructorDashboardLayout/InstructorDashboardLayout";
 import InstructorDashboardDashboard from "./components/InstructorDashboard/InstructorDashboardDashboard/InstructorDashboardDashboard";
 import InstructorDashboardCourses from "./components/InstructorDashboard/InstructorDashboardCourses/InstructorDashboardCourses";
@@ -38,14 +41,14 @@ import SocialLinks from "./components/SocialLinks/SocialLinks.jsx";
 import Documents from "./components/Documents/Documents.jsx";
 import Skills from "./components/Skills/Skills.jsx";
 
+/* Progress */
 import ProfileMetrics from "./components/Progress/ProfileMetrics.jsx";
 import XPGrowth from "./components/Progress/XPGrowth.jsx";
 import CourseCompletion from "./components/Progress/CourseCompletion.jsx";
 import ProgressperCourse from "./components/Progress/ProgressperCourse";
 import DailyLearningHours from "./components/Progress/DailyLearningHours";
-
-import { supabase } from "./components/layout/services/supabaseClient";
-import api from "./components/layout/services/Api";
+import JobsPage from "./pages/Jobs/JobsPage.jsx";
+import Projects from "./pages/Projects/Projects.jsx";
 
 const Jobs = () => <h1>Jobs</h1>;
 
@@ -243,8 +246,9 @@ export default function App() {
         { path: "profile", element: <Profile /> },
         { path: "roadmap", element: <RoadmapPage /> },
         { path: "chatbot", element: <Chatbot /> },
-        { path: "jobs", element: <Jobs /> },
+        { path: "jobs", element: <JobsPage /> },
         { path: "progress", element: <ProgressPage /> },
+        { path: "projects", element: <Projects /> },
         { path: "softSkills", element: <SoftSkills /> },
         { path: "ranking", element: <Ranking /> },
         { path: "careertwin", element: <Career /> },
