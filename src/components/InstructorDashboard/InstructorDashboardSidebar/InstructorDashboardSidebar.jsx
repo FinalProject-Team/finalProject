@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import {
   LayoutDashboard,
@@ -8,9 +9,26 @@ import {
   Zap,
 } from "lucide-react";
 
+import { getCurrentUser } from "../../../services/api/instructorService";
+
 import styles from "./InstructorDashboardSidebar.module.css";
 
 function InstructorDashboardSidebar({ isOpen, onClose }) {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const loadUser = async () => {
+      try {
+        const response = await getCurrentUser();
+        setUser(response?.user || response);
+      } catch (error) {
+        console.error("Failed to load user:", error);
+      }
+    };
+
+    loadUser();
+  }, []);
+
   const links = [
     {
       to: "/instructor/dashboard",
@@ -86,10 +104,12 @@ function InstructorDashboardSidebar({ isOpen, onClose }) {
       </nav>
 
       <div className={styles.userBox}>
-        <div className={styles.avatar}>I</div>
+        <div className={styles.avatar}>
+          {user?.full_name?.charAt(0)?.toUpperCase() || "I"}
+        </div>
 
         <div>
-          <h4>Instructor</h4>
+          <h4>{user?.full_name || "Instructor"}</h4>
           <p>Manage courses</p>
         </div>
       </div>

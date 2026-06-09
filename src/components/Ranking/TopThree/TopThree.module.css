@@ -25,6 +25,7 @@
 .userInfo h5 {
   font-size: 16px;
   margin-bottom: 2px;
+  color: var(--text-primary);
 }
 
 .userInfo span {
@@ -40,25 +41,26 @@
   align-items: flex-start;
   justify-content: center;
   padding-top: 22px;
+  backdrop-filter: blur(12px);
 }
 
 .first {
   height: 260px;
   color: var(--accent-amber);
-  background: rgba(245, 158, 11, 0.12);
-  border: 1px solid rgba(245, 158, 11, 0.25);
+  background: color-mix(in srgb, var(--accent-amber) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent-amber) 25%, transparent);
 }
 
 .second {
   height: 210px;
-  color: #9db4ff;
-  background: rgba(148, 163, 184, 0.12);
-  border: 1px solid rgba(148, 163, 184, 0.22);
+  color: var(--accent-blue);
+  background: color-mix(in srgb, var(--accent-blue) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent-blue) 22%, transparent);
 }
 
 .third {
   height: 180px;
-  color: #e36a16;
-  background: rgba(227, 106, 22, 0.1);
-  border: 1px solid rgba(227, 106, 22, 0.22);
+  color: var(--accent-purple);
+  background: color-mix(in srgb, var(--accent-purple) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent-purple) 22%, transparent);
 }
