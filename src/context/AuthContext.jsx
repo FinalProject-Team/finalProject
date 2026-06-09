@@ -1,128 +1,77 @@
-import { createContext, useContext, useState, useEffect } from "react";
-import { supabase } from "../lib/supabaseClient";
-
-// ─────────────────────────────────────────────────────
-//  Mock user — replace with real JWT / session logic
-//  TODO: Connect with backend auth for email/password login
-// ─────────────────────────────────────────────────────
-const MOCK_USER = {
-  id: "u_001",
-  name: "Salma Ahmed",
-  role: "student",
-  avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Salma",
-  level: 12,
-  xp: 820,
-  xpMax: 1200,
-  verified: true,
-  hasPaid: false,
-};
+import { createContext, useContext, useEffect, useState, useRef } from 'react';
+import { supabase } from '../lib/supabaseClient';
 
 const AuthContext = createContext(null);
 
-function buildUserPayload(signedUser) {
-  if (!signedUser) return null;
-  return {
-    id: signedUser.id,
-    email: signedUser.email,
-    role: signedUser.user_metadata?.role || "student",
-    avatar: signedUser.user_metadata?.avatar || MOCK_USER.avatar,
-    hasPaid: signedUser.user_metadata?.hasPaid ?? false,
-  };
-}
-
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
+  const [user, setUser]       = useState(null);
+  const [session, setSession] = useState(null);
+  const [role, setRole]       = useState(null);   // 'student' | 'job_seeker' | 'instructor' | 'admin'
   const [loading, setLoading] = useState(true);
+  const [roleLoading, setRoleLoading] = useState(false);
+  const mounted               = useRef(true);
 
-  function persistUser(userData) {
-    setUser(userData);
-    if (userData) {
-      localStorage.setItem("ct_auth_user", JSON.stringify(userData));
-    } else {
-      localStorage.removeItem("ct_auth_user");
+  // Fetch backend role from /api/auth/me whenever we have a token
+  const fetchRole = async () => {
+    try {
+      const data = await apiGetMe();
+      const r = data?.user?.role || data?.role || null;
+      if (mounted.current) setRole(r);
+      return r;
+    } catch {
+      if (mounted.current) setRole(null);
+      return null;
     }
-  }
+  };
 
   useEffect(() => {
-    let mounted = true;
-    const restoreSession = async () => {
-      if (!supabase) {
-        const stored = localStorage.getItem("ct_auth_user");
-        if (stored) {
-          try { if (mounted) setUser(JSON.parse(stored)); } catch { }
-        }
-        if (mounted) setLoading(false);
-        return;
-      }
+    mounted.current = true;
+    if (!supabase) { setLoading(false); return; }
 
-      const { data } = await supabase.auth.getSession();
-      const signedUser = data?.session?.user;
-      if (signedUser) {
-        const payload = buildUserPayload(signedUser);
-        persistUser(payload);
-      } else {
-        const stored = localStorage.getItem("ct_auth_user");
-        if (stored) {
-          try { if (mounted) setUser(JSON.parse(stored)); } catch { }
-        }
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      if (!mounted.current) return;
+      setSession(session);
+      setUser(session?.user ?? null);
+      // If token already in localStorage, resolve role immediately
+      if (localStorage.getItem('token')) {
+        setRoleLoading(true);
+        await fetchRole();
+        setRoleLoading(false);
       }
-      if (mounted) setLoading(false);
-    };
-
-    restoreSession();
-
-    const authListener = supabase?.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_IN' || event === 'USER_UPDATED') {
-        const signedUser = session?.user;
-        if (signedUser) {
-          const payload = buildUserPayload(signedUser);
-          persistUser(payload);
-        }
-      }
-
-      if (event === 'SIGNED_OUT') {
-        persistUser(null);
-      }
+      setLoading(false);
     });
 
-    const subscription = authListener?.data?.subscription ?? authListener?.subscription ?? authListener;
-
-    return () => {
-      mounted = false;
-      if (subscription?.unsubscribe) {
-        subscription.unsubscribe();
-      } else if (typeof subscription === 'function') {
-        subscription();
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        if (!mounted.current) return;
+        setSession(session);
+        setUser(session?.user ?? null);
+        if (event === 'SIGNED_OUT') { setRole(null); localStorage.removeItem('token'); }
       }
-    };
+    );
+
+    return () => { mounted.current = false; subscription.unsubscribe(); };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  async function signInWithEmail(email, password) {
-    if (!supabase) {
-      const mock = { ...MOCK_USER, email, role: "student" };
-      persistUser(mock);
-      return { user: mock };
-    }
-
+  const signInWithEmail = async (email, password) => {
+    if (!supabase) throw new Error('Supabase not configured');
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) throw error;
-    const signedUser = data?.user;
-    if (!signedUser) throw new Error("Unable to sign in with email");
-    const userPayload = {
-      id: signedUser.id,
-      email: signedUser.email,
-      role: signedUser.user_metadata?.role || "student",
-      avatar: signedUser.user_metadata?.avatar || MOCK_USER.avatar,
-      hasPaid: signedUser.user_metadata?.hasPaid ?? false,
-    };
-    persistUser(userPayload);
-    return { user: userPayload };
-  }
+    // Get backend JWT + role
+    try {
+      const res = await apiLogin(email, password);
+      if (mounted.current) setRole(res?.user?.role || null);
+      return { ...data, backendRole: res?.user?.role };
+    } catch {
+      return data;
+    }
+  };
 
-  async function signInWithGoogle() {
-    if (!supabase) throw new Error("Auth service not configured");
+  const signInWithGoogle = async () => {
+    if (!supabase) throw new Error('Supabase not configured');
     const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
+      provider: 'google',
       options: { redirectTo: window.location.origin },
     });
     if (error) throw error;

@@ -5,43 +5,77 @@ import axios from "axios";
 import Header from "../../components/Header/Header";
 import InstructorCard from "../../components/InstructorCard/InstructorCard";
 import StatsCards from "../../components/StatsCards/StatsCards";
-import RoadmapSection from "../../components/Roadmap/RoadmapMilestones/RoadmapMilestones";
+import RoadmapSection from "../../components/RoadmapSection/RoadmapSection";
 import PriceCard from "../../components/PriceCard/PriceCard";
 
-import courses from "../../data/coursesData";
 import styles from "./CourseDetails.module.css";
 
 export default function CourseDetails() {
   const { id } = useParams();
+
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    let mounted = true;
-    async function load() {
-      setLoading(true);
-      if (!id) {
-        setCourse(courses[0]);
-        setLoading(false);
-        return;
-      }
+    const fetchCourseData = async () => {
       try {
-        const res = await axios.get(`https://final-project-backend-production-214a.up.railway.app/api/courses/${id}`);
-        if (mounted) setCourse(res.data);
-      } catch (err) {
-        // fallback to local data
-        const local = courses.find((c) => String(c.id) === String(id)) || courses[0];
-        if (mounted) setCourse(local);
+        setLoading(true);
+
+        const courseRes = await axios.get(
+          `https://final-project-backend-production-214a.up.railway.app/api/courses/${id}`
+        );
+
+        let lessonsData = [];
+
+        try {
+          const token = localStorage.getItem("token");
+
+          const lessonsRes = await axios.get(
+            `https://final-project-backend-production-214a.up.railway.app/api/courses/${id}/lessons`,
+            {
+              headers: {
+                Authorization: token?.startsWith("Bearer ")
+                  ? token
+                  : `Bearer ${token}`,
+              },
+            }
+          );
+
+          lessonsData = lessonsRes.data || [];
+        } catch (lessonError) {
+          lessonsData = [
+            {
+              id: "preview",
+              title: "Free Preview",
+              video_url: courseRes.data.video_preview,
+              lesson_order: 1,
+              duration: "Preview",
+            },
+          ];
+        }
+
+        setCourse({
+          ...courseRes.data,
+          lessons: lessonsData,
+          isPurchased: false,
+        });
+      } catch (error) {
+        console.error("Error loading course:", error);
       } finally {
-        if (mounted) setLoading(false);
+        setLoading(false);
       }
-    }
-    load();
-    return () => { mounted = false; };
+    };
+
+    fetchCourseData();
   }, [id]);
 
-  if (loading) return <div className={styles.page}>Loading…</div>;
-  if (!course) return <div className={styles.page}>Course not found.</div>;
+  if (loading) {
+    return <h2 className={styles.loading}>Loading...</h2>;
+  }
+
+  if (!course) {
+    return <h2 className={styles.loading}>Course Not Found</h2>;
+  }
 
   return (
     <div className={styles.page}>
@@ -49,8 +83,10 @@ export default function CourseDetails() {
 
       <div className={styles.contentWrapper}>
         <div className={styles.leftSection}>
-          <InstructorCard />
+          <InstructorCard course={course} />
+
           <StatsCards course={course} />
+
           <RoadmapSection course={course} />
         </div>
 

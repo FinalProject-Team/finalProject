@@ -37,16 +37,15 @@
   display: flex;
   align-items: center;
   gap: 10px;
-
   margin-bottom: 20px;
-
   color: var(--text-secondary);
-
   cursor: pointer;
-
   transition: var(--transition);
+  background: transparent;
+  border: none;
+  padding: 0;
+  font: inherit;
 }
-
 .backButton:hover {
   color: var(--accent-cyan);
 }
