@@ -118,24 +118,22 @@ export default function App() {
       try {
         const res = await api.post("/api/auth/google-login", { user });
         const role = res.data?.user?.role;
-
- const Router = createBrowserRouter([
- { path: "/", element: <Home theme={theme} toggleTheme={toggleTheme} /> },
- { path: "/payment", element: <Payment /> },
- { path: "/register", element: <Register /> },
- { path: "/login", element: <Login /> },
- { path: "/course-details", element: <CourseDetails /> },
- { path: "/course-details/:id", element: <CourseDetails /> },
- { path: "/register-job", element: <RegisterJob /> },
+        // هنا يمكنك إضافة منطق التوجيه بناءً على الـ role إذا احتجتِ لاحقاً
+      } catch (error) {
+        console.error("Error sending session to backend:", error);
+      }
+    };
 
     getSessionAndSendToBackend();
   }, []);
 
+  // 📝 مصفوفة الراوتر كاملة ومجمعة بدون تكرار أو قطع في الأقواس
   const Router = createBrowserRouter([
-    { path: "/", element: <Home /> },
+    { path: "/", element: <Home theme={theme} toggleTheme={toggleTheme} /> },
     { path: "/login", element: <Login /> },
     { path: "/register", element: <Register /> },
     { path: "/course-details", element: <CourseDetails /> },
+    { path: "/course-details/:id", element: <CourseDetails /> },
     { path: "/register-job", element: <RegisterJob /> },
     {
       path: "/payment",
@@ -145,51 +143,59 @@ export default function App() {
         </ProtectedRoute>
       ),
     },
-{
-  path: "/instructor",
-  element: (
-    <ProtectedRoute allowedRoles={['instructor']}>
-      <InstructorDashboardLayout />
-    </ProtectedRoute>
-  ),
-  children: [
-    { path: "dashboard", element: <InstructorDashboardDashboard /> },
-    { path: "courses", element: <InstructorDashboardCourses /> },
-    { path: "lessons", element: <InstructorDashboardLessons /> },
-    { path: "interactive-sessions", element: <InstructorDashboardInteractiveSessions /> },
-    { path: "profile", element: <InstructorDashboardProfile /> }
-  ]
-},
+    {
+      path: "/instructor",
+      element: (
+        <ProtectedRoute allowedRoles={['instructor']}>
+          <InstructorDashboardLayout />
+        </ProtectedRoute>
+      ),
+      children: [
+        { path: "dashboard", element: <InstructorDashboardDashboard /> },
+        { path: "courses", element: <InstructorDashboardCourses /> },
+        { path: "lessons", element: <InstructorDashboardLessons /> },
+        { path: "interactive-sessions", element: <InstructorDashboardInteractiveSessions /> },
+        { path: "profile", element: <InstructorDashboardProfile /> }
+      ]
+    },
+    {
+      path: "/admin",
+      element: <AdminLayout />,
+      children: [
+        { index: true, element: <AdminDashboard /> },
+        { path: "users", element: <AdminUsers /> },
+        { path: "courses", element: <AdminCourses /> },
+        { path: "lessons", element: <AdminLessons /> }
+      ]
+    },
+    {
+      path: "/dashboard",
+      element: (
+        <ProtectedRoute requirePayment={true}>
+          <Layout />
+        </ProtectedRoute>
+      ),
+      children: [
+        { path: "dashboard", element: <Dashboard /> },
+        { path: "profile", element: <Profile /> },
+        { path: "roadmap", element: <RoadmapPage /> },
+        { path: "chatbot", element: <Chatbot /> },
+        // { path: "jobs", element: <Jobs /> }, // تأكدي من عمل import لـ Jobs لو هتشغلي السطر ده
+        { path: "progress", element: <ProgressPage /> },
+        { path: "softSkills", element: <SoftSkills /> },
+        { path: "ranking", element: <Ranking /> },
+        { path: "careertwin", element: <Career /> },
+        { path: "community", element: <CommunityPage /> },
+        { path: "live-session", element: <LiveSession /> }
+      ]
+    }
+  ]);
 
-{
-  path: "/admin",
-  element: <AdminLayout />,
-  children: [
-    { index: true, element: <AdminDashboard /> },
-    { path: "users", element: <AdminUsers /> },
-    { path: "courses", element: <AdminCourses /> },
-    { path: "lessons", element: <AdminLessons /> }
-  ]
-},
-
-{
-  path: "/dashboard",
-  element: (
-    <ProtectedRoute requirePayment={true}>
-      <Layout />
-    </ProtectedRoute>
-  ),
-  children: [
-    { path: "dashboard", element: <Dashboard /> },
-    { path: "profile", element: <Profile /> },
-    { path: "roadmap", element: <RoadmapPage /> },
-    { path: "chatbot", element: <Chatbot /> },
-    { path: "jobs", element: <Jobs /> },
-    { path: "progress", element: <ProgressPage /> },
-    { path: "softSkills", element: <SoftSkills /> },
-    { path: "ranking", element: <Ranking /> },
-    { path: "careertwin", element: <Career /> },
-    { path: "community", element: <CommunityPage /> },
-    { path: "live-session", element: <LiveSession /> }
-  ]
+  return (
+    <ThemeProvider value={{ theme, toggleTheme }}>
+      <PostsProvider>
+        <RouterProvider router={Router} />
+      </PostsProvider>
+    </ThemeProvider>
+  );
 }
