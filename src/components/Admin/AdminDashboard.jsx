@@ -1,15 +1,58 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Users, GraduationCap, UserCheck, BookOpen, FileText, TrendingUp, Activity } from 'lucide-react';
 import styles from './AdminDashboard.module.css';
+import api from './adminApi';
 
 export default function AdminDashboard() {
+  // 1️⃣ تعريف الـ States لتخزين البيانات وحالة التحميل
+  const [stats, setStats] = useState({
+    totalCourses: 0,
+    totalLessons: 0,
+    totalUsers: 0
+  });
+  const [loading, setLoading] = useState(true);
+
+  // 2️⃣ استدعاء الـ API عند فتح الصفحة
+  useEffect(() => {
+    const fetchDashboardStats = async () => {
+      try {
+        setLoading(true);
+        // نداء على الـ URL المظبوط بناءً على السواجر
+        const response = await api.get('/api/admin/dashboard');
+        
+        // حفظ الداتا اللي راجعة جوه الـ state
+        if (response.data) {
+          setStats(response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching admin dashboard stats:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDashboardStats();
+  }, []);
+
+  // 3️⃣ توزيع الداتا الحقيقية على الـ الكروت
   const cards = [
-    { title: 'Total Users', count: 0, icon: <Users size={22} />, bgClass: styles.bgCyan },
-    { title: 'Students', count: 0, icon: <GraduationCap size={22} />, bgClass: styles.bgEmerald },
-    { title: 'Instructors', count: 0, icon: <UserCheck size={22} />, bgClass: styles.bgOrange },
-    { title: 'Total Courses', count: 0, icon: <BookOpen size={22} />, bgClass: styles.bgIndigo },
-    { title: 'Total Lessons', count: 0, icon: <FileText size={22} />, bgClass: styles.bgCyanDark },
+    { title: 'Total Users', count: stats.totalUsers, icon: <Users size={22} />, bgClass: styles.bgCyan },
+    { title: 'Students', count: stats.totalUsers, icon: <GraduationCap size={22} />, bgClass: styles.bgEmerald }, // تقدري تعدليها لو الـ API بقى يرجع طلاب منفصلين
+    { title: 'Instructors', count: 1, icon: <UserCheck size={22} />, bgClass: styles.bgOrange }, // داتا افتراضية أو تعدل لاحقاً
+    { title: 'Total Courses', count: stats.totalCourses, icon: <BookOpen size={22} />, bgClass: styles.bgIndigo },
+    { title: 'Total Lessons', count: stats.totalLessons, icon: <FileText size={22} />, bgClass: styles.bgCyanDark },
   ];
+
+  // شكل لطيف أثناء التحميل بدل ما تظهر أصفار فجأة
+  if (loading) {
+    return (
+      <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '80vh', color: 'white' }}>
+        <div className="spinner-border text-info" role="status">
+          <span className="visually-hidden">Loading Dashboard Data...</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.dashboardContainer}>
@@ -44,21 +87,21 @@ export default function AdminDashboard() {
                   <span className={styles.bullet} style={{ backgroundColor: '#34d399' }}></span>
                   <span className="text-secondary" style={{ fontSize: '0.875rem' }}>New users registered today</span>
                 </div>
-                <span className="fw-bold text-dark" style={{ fontSize: '0.875rem' }}>24</span>
+                <span className="fw-bold text-dark" style={{ fontSize: '0.875rem' }}>{stats.totalUsers}</span>
               </div>
               <div className={styles.activityRow}>
                 <div className="d-flex align-items-center gap-3">
                   <span className={styles.bullet} style={{ backgroundColor: '#22d3ee' }}></span>
-                  <span className="text-secondary" style={{ fontSize: '0.875rem' }}>Courses published this week</span>
+                  <span className="text-secondary" style={{ fontSize: '0.875rem' }}>Courses published</span>
                 </div>
-                <span className="fw-bold text-dark" style={{ fontSize: '0.875rem' }}>7</span>
+                <span className="fw-bold text-dark" style={{ fontSize: '0.875rem' }}>{stats.totalCourses}</span>
               </div>
               <div className={styles.activityRow}>
                 <div className="d-flex align-items-center gap-3">
                   <span className={styles.bullet} style={{ backgroundColor: '#818cf8' }}></span>
                   <span className="text-secondary" style={{ fontSize: '0.875rem' }}>Lessons completed</span>
                 </div>
-                <span className="fw-bold text-dark" style={{ fontSize: '0.875rem' }}>1,234</span>
+                <span className="fw-bold text-dark" style={{ fontSize: '0.875rem' }}>{stats.totalLessons}</span>
               </div>
             </div>
           </div>
@@ -79,7 +122,7 @@ export default function AdminDashboard() {
                 <div className={`${styles.quickStatBox} ${styles.activeUsersBox}`}>
                   <Activity style={{ color: '#10b981', marginBottom: '12px' }} size={20} />
                   <span className="text-muted d-block mb-1" style={{ fontSize: '0.75rem' }}>Active Users</span>
-                  <span className="fw-bold" style={{ color: '#059669', fontSize: '1.125rem' }}>156</span>
+                  <span className="fw-bold" style={{ color: '#059669', fontSize: '1.125rem' }}>{stats.totalUsers}</span>
                 </div>
               </div>
             </div>
